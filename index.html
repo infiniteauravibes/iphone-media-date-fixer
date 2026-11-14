@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -197,15 +197,23 @@ dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(4px)}
 .dlg ol{padding-left:20px;margin:16px 0 22px;display:grid;gap:10px}
 .okic{width:52px;height:52px;border-radius:16px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;margin-bottom:16px}
 .err{background:var(--red-soft);color:var(--red);padding:14px 18px;border-radius:14px;margin-bottom:20px}
+
+/* language switcher */
+.lang{display:flex;gap:2px;padding:3px;background:var(--card2);border:1px solid var(--line);border-radius:999px;flex-shrink:0}
+.lang button{border:0;background:transparent;padding:5px 11px;border-radius:999px;cursor:pointer;font-size:12.5px;font-weight:650;letter-spacing:.04em;color:var(--muted);transition:.15s}
+.lang button:hover{color:var(--text)}
+.lang button.on{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+@media (max-width:640px){.top{padding:10px 16px}.brand small{display:none}}
 </style>
 </head>
 <body>
 
 <header class="top">
   <div class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.8v3.4M16 2.8v3.4"/></svg></div>
-  <div class="brand">Mediadate<small>Дата, место и метаданные фото и видео с iPhone</small></div>
+  <div class="brand">Mediadate<small data-i18n="brandSub">Date, location &amp; metadata of iPhone photos and videos</small></div>
   <div class="sp"></div>
-  <button class="btn" id="openBtn2" hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Другой файл</button>
+  <button class="btn" id="openBtn2" hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="otherFile">Open another</span></button>
+  <div class="lang" id="lang" role="group" aria-label="Language"><button data-lang="en" class="on" aria-pressed="true">EN</button><button data-lang="ru" aria-pressed="false">RU</button></div>
 </header>
 
 <main>
@@ -214,11 +222,11 @@ dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(4px)}
   <section class="empty" id="empty">
     <div class="drop" id="drop">
       <div class="bigic"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.8v3.4M16 2.8v3.4M9 15l2 2 4-4"/></svg></div>
-      <h1>Исправьте дату съёмки</h1>
-      <p>Перетащите сюда фото или видео с iPhone. Покажу дату, место, устройство, все дорожки и блоки метаданных, а исправленную дату перепишу во всех местах, где она хранится.</p>
-      <button class="btn primary lg" id="openBtn">Выбрать файл</button>
+      <h1 data-i18n="dropTitle">Fix the capture date</h1>
+      <p data-i18n="dropText"></p>
+      <button class="btn primary lg" id="openBtn" data-i18n="chooseFile">Choose file</button>
       <div class="formats"><span class="pill">MOV</span><span class="pill">MP4</span><span class="pill">HEIC</span><span class="pill">JPEG</span></div>
-      <div class="privacy"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Файл не покидает компьютер: всё обрабатывается в браузере</div>
+      <div class="privacy"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span data-i18n="privacy"></span></div>
     </div>
   </section>
 
@@ -239,7 +247,7 @@ dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(4px)}
       <div class="card pad" id="dateCard">
         <div class="ch">
           <div class="ic blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-          <div><h2>Дата и время съёмки</h2><p id="dateSrc"></p></div>
+          <div><h2 data-i18n="dateTitle"></h2><p id="dateSrc"></p></div>
         </div>
         <div class="cmp">
           <div class="when" id="whenOld"></div>
@@ -247,18 +255,18 @@ dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(4px)}
           <div class="when new" id="whenNew"></div>
         </div>
         <div class="fields">
-          <div class="fld"><label for="inDate">Дата</label><input class="inp" type="date" id="inDate"></div>
-          <div class="fld"><label for="inTime">Время</label><input class="inp" type="time" step="1" id="inTime"></div>
-          <div class="fld"><label for="inTz">Часовой пояс</label><select class="inp" id="inTz"></select></div>
+          <div class="fld"><label for="inDate" data-i18n="lblDate"></label><input class="inp" type="date" id="inDate"></div>
+          <div class="fld"><label for="inTime" data-i18n="lblTime"></label><input class="inp" type="time" step="1" id="inTime"></div>
+          <div class="fld"><label for="inTz" data-i18n="lblTz"></label><select class="inp" id="inTz"></select></div>
         </div>
         <div class="chips" id="chips">
-          <button class="chip" data-s="-86400">−1 день</button>
-          <button class="chip" data-s="-3600">−1 час</button>
-          <button class="chip" data-s="-60">−1 мин</button>
-          <button class="chip" data-s="60">+1 мин</button>
-          <button class="chip" data-s="3600">+1 час</button>
-          <button class="chip" data-s="86400">+1 день</button>
-          <button class="chip reset" id="resetDate">Вернуть исходное</button>
+          <button class="chip" data-s="-86400" data-i18n="chipDm"></button>
+          <button class="chip" data-s="-3600" data-i18n="chipHm"></button>
+          <button class="chip" data-s="-60" data-i18n="chipMm"></button>
+          <button class="chip" data-s="60" data-i18n="chipMp"></button>
+          <button class="chip" data-s="3600" data-i18n="chipHp"></button>
+          <button class="chip" data-s="86400" data-i18n="chipDp"></button>
+          <button class="chip reset" id="resetDate" data-i18n="reset"></button>
         </div>
         <div class="delta" id="delta"></div>
         <div class="note" id="dateNote" hidden></div>
@@ -268,15 +276,15 @@ dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(4px)}
       <div class="card pad" id="locCard">
         <div class="ch">
           <div class="ic green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></div>
-          <div><h2>Место съёмки</h2><p id="locSrc"></p></div>
+          <div><h2 data-i18n="locTitle"></h2><p id="locSrc"></p></div>
           <div class="sp"></div>
-          <label class="switch" id="locSwitchWrap"><input type="checkbox" id="locSwitch"> Изменить</label>
+          <label class="switch" id="locSwitchWrap"><input type="checkbox" id="locSwitch"> <span data-i18n="locEdit"></span></label>
         </div>
         <div class="loc" id="locView"></div>
         <div class="locf" id="locFields" hidden>
-          <div class="fld"><label for="inLat">Широта (−90…90)</label><input class="inp" id="inLat" inputmode="decimal" placeholder="48.8584"></div>
-          <div class="fld"><label for="inLon">Долгота (−180…180)</label><input class="inp" id="inLon" inputmode="decimal" placeholder="2.2945"></div>
-          <div class="fld"><label for="inAlt">Высота, м</label><input class="inp" id="inAlt" inputmode="decimal" placeholder="—"></div>
+          <div class="fld"><label for="inLat" data-i18n="lblLat"></label><input class="inp" id="inLat" inputmode="decimal" placeholder="48.8584"></div>
+          <div class="fld"><label for="inLon" data-i18n="lblLon"></label><input class="inp" id="inLon" inputmode="decimal" placeholder="2.2945"></div>
+          <div class="fld"><label for="inAlt" data-i18n="lblAlt"></label><input class="inp" id="inAlt" inputmode="decimal" placeholder="—"></div>
         </div>
         <div class="note" id="locNote" hidden></div>
       </div>
@@ -285,7 +293,7 @@ dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(4px)}
       <div class="card pad">
         <div class="ch">
           <div class="ic orange"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg></div>
-          <div><h2>Что будет переписано</h2><p>Все места в файле, где хранится дата или место. Остальные байты останутся нетронутыми.</p></div>
+          <div><h2 data-i18n="chTitle"></h2><p data-i18n="chSub"></p></div>
         </div>
         <div id="changes"></div>
       </div>
@@ -301,25 +309,216 @@ dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(4px)}
 
 <div class="savebar" id="savebar" hidden>
   <div class="txt" id="saveTxt"></div>
-  <button class="btn primary" id="saveBtn" disabled>Сохранить файл</button>
+  <button class="btn primary" id="saveBtn" disabled data-i18n="saveBtn"></button>
 </div>
 
-<div id="dropOverlay"><div>Отпустите, чтобы открыть файл</div></div>
+<div id="dropOverlay"><div data-i18n="dropOverlay"></div></div>
 <input type="file" id="fileIn" accept=".mov,.mp4,.m4v,.heic,.heif,.jpg,.jpeg,video/quicktime,video/mp4,image/heic,image/jpeg" hidden>
 
 <dialog id="doneDlg">
   <div class="dlg">
     <div class="okic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
-    <h3>Файл сохранён</h3>
+    <h3 data-i18n="doneTitle"></h3>
     <div class="muted" id="doneName"></div>
     <ol>
-      <li>Отправьте сохранённый файл на iPhone через AirDrop. Он появится в «Фото» на дату <b id="doneDate"></b>.</li>
-      <li>Проверьте, что ролик встал на нужное место в хронологии.</li>
-      <li>Удалите в «Фото» старую копию с неверной датой (и очистите «Недавно удалённые», если нужно).</li>
+      <li><span data-i18n="done1a"></span> <b id="doneDate"></b><span data-i18n="done1b"></span></li>
+      <li data-i18n="done2"></li>
+      <li data-i18n="done3"></li>
     </ol>
-    <button class="btn primary" id="doneOk">Готово</button>
+    <button class="btn primary" id="doneOk" data-i18n="doneOk"></button>
   </div>
 </dialog>
+
+<!-- ================= I18N: English (default) & Russian ================= -->
+<script id="i18n">
+const I18N = (() => {
+'use strict';
+const ruPlural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? a : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? b : c; };
+const D = {
+  en: {
+    // static UI
+    brandSub: 'Date, location & metadata of iPhone photos and videos',
+    otherFile: 'Open another',
+    dropTitle: 'Fix the capture date',
+    dropText: 'Drop an iPhone photo or video here to see its date, location, device, tracks and every metadata block — then rewrite the corrected date everywhere it’s stored.',
+    chooseFile: 'Choose file',
+    privacy: 'Your file never leaves this computer — everything runs in the browser',
+    dateTitle: 'Capture date & time',
+    lblDate: 'Date', lblTime: 'Time', lblTz: 'Time zone',
+    chipDm: '−1 day', chipHm: '−1 hour', chipMm: '−1 min', chipMp: '+1 min', chipHp: '+1 hour', chipDp: '+1 day',
+    reset: 'Restore original',
+    locTitle: 'Location', locEdit: 'Edit',
+    lblLat: 'Latitude (−90…90)', lblLon: 'Longitude (−180…180)', lblAlt: 'Altitude, m',
+    chTitle: 'What will be rewritten',
+    chSub: 'Every place in the file where the date or location is stored. All other bytes stay untouched.',
+    saveBtn: 'Save file', saving: 'Saving…',
+    dropOverlay: 'Release to open the file',
+    doneTitle: 'File saved',
+    done1a: 'Send the saved file to your iPhone via AirDrop. It will appear in Photos on', done1b: '.',
+    done2: 'Check that it landed in the right place in your timeline.',
+    done3: 'Delete the old copy with the wrong date in Photos (and empty “Recently Deleted” if needed).',
+    doneOk: 'Done',
+    // units & formatting
+    nBytes: n => `${n} bytes`, uB: 'B', uKB: 'KB', uMB: 'MB', uGB: 'GB',
+    uSec: 's', uMm: 'mm', uM: 'm', uFps: 'fps', uHz: 'Hz', uKHz: 'kHz', uMbps: 'Mbit/s', uKbps: 'kbit/s',
+    uDay: 'd', uHour: 'h', uMin: 'min',
+    durMin: (m, s) => `${m}:${s} min`, durSec: s => `${s} s`,
+    later: s => `later by ${s}`, earlier: s => `earlier by ${s}`,
+    // core: parsing
+    errDateRange: 'Date is out of the supported range',
+    errNoMoov: 'The file has no moov box — it doesn’t look like a QuickTime/MP4 video.',
+    errNoHeicMeta: 'The HEIC file has no meta box.',
+    errFormat: 'Unknown format. Supported: MOV/MP4, HEIC and JPEG.',
+    errAddKey: 'Could not add the key: unexpected moov/meta structure',
+    hdrMovie: 'Movie (mvhd)', hdrTrack: n => `Track ${n} (tkhd)`, hdrTrackMedia: n => `Track ${n}, media (mdhd)`,
+    metaQt: 'QuickTime file metadata', metaItunes: 'iTunes metadata (udta/meta)', metaTrack: n => `Track ${n} metadata`,
+    srcMvhd: 'moov/mvhd (UTC, no time zone)', srcFile: 'file date — no date in the metadata',
+    grpDate: 'Date', grpPlace: 'Location',
+    notSet: '— not set (0) —', none: '— none —', newKey: k => `${k} (new key)`,
+    udtaDay: 'Date (udta ©day)', udtaXyz: 'Coordinates (udta ©xyz)',
+    outOfBlock: '(outside the block)', imageData: 'image data',
+    mnRuntime: 'RunTime (device uptime, bplist)', mnContentId: 'ContentIdentifier (Live Photo pair)',
+    offFromGps: 'derived from GPS time',
+    noGpsReason: 'This photo has no GPS block. Coordinates can’t be added without rebuilding EXIF, so location editing is disabled.',
+    mainImage: 'Main image › ', embImage: n => `Embedded image ${n} › `,
+    // app
+    errRead: 'Could not read the file: ', errSave: 'Could not save: ',
+    kindVideo: 'Video', kindPhoto: 'Photo',
+    heicNoPreview: 'This browser can’t preview HEIC<br>(open the page in Safari)',
+    fDevice: 'Device', fIos: 'iOS', fLens: 'Lens', fVideo: 'Video', fFps: 'Frame rate', fRot: 'Rotation',
+    rotPortrait: 'portrait', rotRotated: 'rotated', fAudio: 'Audio', stereo: 'stereo', nCh: n => `${n} ch`,
+    fDuration: 'Duration', fTracks: 'Tracks', fSize: 'Dimensions', fFocal35: 'Focal length (35 mm)', fExposure: 'Exposure',
+    fFsModified: 'File modified (file system)',
+    noDateSrc: 'No date found in the file',
+    noDateNote: 'This file has no capture-date field that can be safely corrected.',
+    source: 'Source: ', tzFrom: s => ` · time zone ${s}`,
+    nowInFile: 'Currently in file', willBe: 'Will be', noChange: 'No change',
+    noTzVideo: 'The file has no time zone, so times are shown in this computer’s time zone. Pick the time zone where it was shot: saving will add a com.apple.quicktime.creationdate field.',
+    noTzPhoto: 'The file has no time zone (no OffsetTime), so times are shown in this computer’s time zone. iPhone will show the time “as is”.',
+    tzNames: { 0: 'London, Lisbon', 60: 'Berlin, Paris, Rome', 120: 'Kaliningrad, Kyiv, Athens', 180: 'Moscow, Istanbul, Minsk', 240: 'Dubai, Samara, Tbilisi', 300: 'Yekaterinburg, Tashkent', 330: 'India', 360: 'Omsk, Almaty', 420: 'Novosibirsk, Bangkok', 480: 'Irkutsk, Beijing, Singapore', 540: 'Yakutsk, Tokyo, Seoul', 600: 'Vladivostok, Sydney', 660: 'Magadan', 720: 'Kamchatka, Auckland', '-300': 'New York (winter)', '-240': 'New York (summer)', '-480': 'Los Angeles (winter)', '-420': 'Los Angeles (summer)', '-180': 'São Paulo, Buenos Aires', 210: 'Tehran', 270: 'Kabul', 345: 'Nepal' },
+    noCoords: 'No coordinates in the file',
+    latN: 'N', latS: 'S', lonE: 'E', lonW: 'W',
+    alt: v => `Altitude ${v} m`, acc: v => `accuracy ±${v} m`, openMap: 'Open in map ↗',
+    deltaHint: 'Change the date, time or time zone — or use the quick buttons.',
+    shiftBy: s => `The capture moment moves ${s}`,
+    sameMoment: 'Same capture moment, only the time zone changes',
+    tzChange: (a, b) => ` · time zone ${a} → ${b}`,
+    emptyChanges: 'Nothing changes yet. Edit the date or location and every field that will be rewritten shows up here.',
+    thField: 'Field', thFrom: 'Before', thTo: 'After', thTag: 'Tag', thValue: 'Value', thKey: 'Key', thType: 'Type',
+    hdrStamps: n => `Header timestamps · ${n} ${n === 1 ? 'place' : 'places'}`,
+    hdrWhere: s => `${s} — movie and all tracks (UTC)`,
+    saveCount: n => `<b>${n}</b> ${n === 1 ? 'field' : 'fields'} will be rewritten`,
+    noReencodeV: 'Video and audio are not re-encoded', noReencodeP: 'The image is not recompressed',
+    noChanges: 'No changes', pickNew: 'Pick a new date or location',
+    tabTracks: n => `Tracks · ${n}`, tabMeta: 'All metadata', tabTree: 'File structure',
+    searchKeys: 'Search keys and values…', searchTags: 'Search tags…',
+    trackTitle: (n, s) => `Track ${n} · ${s}`, handler: 'handler',
+    sCodec: 'Codec / format', sRes: 'Resolution', sRate: 'Sample rate', sChannels: 'Channels', sSamples: 'Samples',
+    sBitrate: 'Bitrate', sSize: 'Size', sLang: 'Language', sCreated: 'Created', sModified: 'Modified',
+    secUdta: 'User data · /moov/udta', secHdr: 'Box headers (UTC, seconds since 1904)', created: ' · created', modified: ' · modified',
+    secFtyp: 'File type · ftyp', secFs: 'File system (not part of the file)', fsModified: 'File modification date',
+    nothingFound: 'Nothing found', noGps: 'No GPS data',
+    ifd0: 'IFD0 · main', ifdExif: 'ExifIFD · capture', ifd1: 'IFD1 · thumbnail',
+    mainImg: 'Main image · ', embImg: n => `Embedded image ${n} · `,
+    createdAt: 'created ', mdatInfo: 'compressed video and audio', primaryItem: n => `primary image: item ${n}`,
+  },
+  ru: {
+    brandSub: 'Дата, место и метаданные фото и видео с iPhone',
+    otherFile: 'Другой файл',
+    dropTitle: 'Исправьте дату съёмки',
+    dropText: 'Перетащите сюда фото или видео с iPhone. Покажу дату, место, устройство, все дорожки и блоки метаданных, а исправленную дату перепишу во всех местах, где она хранится.',
+    chooseFile: 'Выбрать файл',
+    privacy: 'Файл не покидает компьютер: всё обрабатывается в браузере',
+    dateTitle: 'Дата и время съёмки',
+    lblDate: 'Дата', lblTime: 'Время', lblTz: 'Часовой пояс',
+    chipDm: '−1 день', chipHm: '−1 час', chipMm: '−1 мин', chipMp: '+1 мин', chipHp: '+1 час', chipDp: '+1 день',
+    reset: 'Вернуть исходное',
+    locTitle: 'Место съёмки', locEdit: 'Изменить',
+    lblLat: 'Широта (−90…90)', lblLon: 'Долгота (−180…180)', lblAlt: 'Высота, м',
+    chTitle: 'Что будет переписано',
+    chSub: 'Все места в файле, где хранится дата или место. Остальные байты останутся нетронутыми.',
+    saveBtn: 'Сохранить файл', saving: 'Сохраняю…',
+    dropOverlay: 'Отпустите, чтобы открыть файл',
+    doneTitle: 'Файл сохранён',
+    done1a: 'Отправьте сохранённый файл на iPhone через AirDrop. Он появится в «Фото» на дату', done1b: '.',
+    done2: 'Проверьте, что файл встал на нужное место в хронологии.',
+    done3: 'Удалите в «Фото» старую копию с неверной датой (и очистите «Недавно удалённые», если нужно).',
+    doneOk: 'Готово',
+    nBytes: n => `${n} байт`, uB: 'Б', uKB: 'КБ', uMB: 'МБ', uGB: 'ГБ',
+    uSec: 'с', uMm: 'мм', uM: 'м', uFps: 'к/с', uHz: 'Гц', uKHz: 'кГц', uMbps: 'Мбит/с', uKbps: 'кбит/с',
+    uDay: 'дн', uHour: 'ч', uMin: 'мин',
+    durMin: (m, s) => `${m}:${s} мин`, durSec: s => `${s} с`,
+    later: s => `позже на ${s}`, earlier: s => `раньше на ${s}`,
+    errDateRange: 'Дата вне допустимого диапазона',
+    errNoMoov: 'В файле нет блока moov — это не похоже на видео QuickTime/MP4.',
+    errNoHeicMeta: 'В HEIC нет блока meta.',
+    errFormat: 'Неизвестный формат. Поддерживаются MOV/MP4, HEIC и JPEG.',
+    errAddKey: 'Не удалось добавить ключ: неожиданная структура moov/meta',
+    hdrMovie: 'Фильм (mvhd)', hdrTrack: n => `Дорожка ${n} (tkhd)`, hdrTrackMedia: n => `Дорожка ${n}, медиа (mdhd)`,
+    metaQt: 'QuickTime-метаданные файла', metaItunes: 'iTunes-метаданные (udta/meta)', metaTrack: n => `Метаданные дорожки ${n}`,
+    srcMvhd: 'moov/mvhd (UTC, без часового пояса)', srcFile: 'дата файла — в метаданных даты нет',
+    grpDate: 'Дата', grpPlace: 'Место',
+    notSet: '— не задано (0) —', none: '— нет —', newKey: k => `${k} (новый ключ)`,
+    udtaDay: 'Дата (udta ©day)', udtaXyz: 'Координаты (udta ©xyz)',
+    outOfBlock: '(вне блока)', imageData: 'данные изображения',
+    mnRuntime: 'RunTime (аптайм устройства, bplist)', mnContentId: 'ContentIdentifier (пара Live Photo)',
+    offFromGps: 'вычислен по GPS-времени',
+    noGpsReason: 'В фото нет GPS-блока: добавить координаты без пересборки EXIF нельзя, поэтому редактирование места отключено.',
+    mainImage: 'Основное изображение › ', embImage: n => `Встроенное изображение ${n} › `,
+    errRead: 'Не удалось прочитать файл: ', errSave: 'Не удалось сохранить: ',
+    kindVideo: 'Видео', kindPhoto: 'Фото',
+    heicNoPreview: 'Превью HEIC этот браузер не показывает<br>(откройте страницу в Safari)',
+    fDevice: 'Устройство', fIos: 'iOS', fLens: 'Объектив', fVideo: 'Видео', fFps: 'Частота кадров', fRot: 'Поворот',
+    rotPortrait: 'вертикальное', rotRotated: 'повёрнутое', fAudio: 'Звук', stereo: 'стерео', nCh: n => `${n} кан.`,
+    fDuration: 'Длительность', fTracks: 'Дорожек', fSize: 'Размер', fFocal35: 'Фокусное (35 мм)', fExposure: 'Экспозиция',
+    fFsModified: 'Файл изменён (ФС)',
+    noDateSrc: 'Дата в файле не найдена',
+    noDateNote: 'В этом файле нет поля с датой съёмки, которое можно безопасно исправить.',
+    source: 'Источник: ', tzFrom: s => ` · пояс ${s}`,
+    nowInFile: 'Сейчас в файле', willBe: 'Станет', noChange: 'Без изменений',
+    noTzVideo: 'В файле не записан часовой пояс — показано время в поясе этого компьютера. Выберите пояс места съёмки: при сохранении будет добавлено поле com.apple.quicktime.creationdate.',
+    noTzPhoto: 'В файле не записан часовой пояс (нет OffsetTime) — показано время в поясе этого компьютера. iPhone будет показывать время «как есть».',
+    tzNames: { 0: 'Лондон, Лиссабон', 60: 'Берлин, Париж, Рим', 120: 'Калининград, Киев, Афины', 180: 'Москва, Стамбул, Минск', 240: 'Дубай, Самара, Тбилиси', 300: 'Екатеринбург, Ташкент', 330: 'Индия', 360: 'Омск, Алматы', 420: 'Новосибирск, Бангкок', 480: 'Иркутск, Пекин, Сингапур', 540: 'Якутск, Токио, Сеул', 600: 'Владивосток, Сидней', 660: 'Магадан', 720: 'Камчатка, Окленд', '-300': 'Нью-Йорк (зима)', '-240': 'Нью-Йорк (лето)', '-480': 'Лос-Анджелес (зима)', '-420': 'Лос-Анджелес (лето)', '-180': 'Сан-Паулу, Буэнос-Айрес', 210: 'Тегеран', 270: 'Кабул', 345: 'Непал' },
+    noCoords: 'Координаты в файле не записаны',
+    latN: 'с. ш.', latS: 'ю. ш.', lonE: 'в. д.', lonW: 'з. д.',
+    alt: v => `Высота ${v} м`, acc: v => `точность ±${v} м`, openMap: 'Открыть на карте ↗',
+    deltaHint: 'Измените дату, время или часовой пояс — или используйте быстрые кнопки.',
+    shiftBy: s => `Момент съёмки сдвинется ${s}`,
+    sameMoment: 'Момент съёмки тот же, меняется только часовой пояс',
+    tzChange: (a, b) => ` · пояс ${a} → ${b}`,
+    emptyChanges: 'Пока ничего не меняется. Измените дату или место — здесь появится список всех полей, которые будут переписаны.',
+    thField: 'Поле', thFrom: 'Было', thTo: 'Станет', thTag: 'Тег', thValue: 'Значение', thKey: 'Ключ', thType: 'Тип',
+    hdrStamps: n => `Метки времени в заголовках · ${n} ${ruPlural(n, 'место', 'места', 'мест')}`,
+    hdrWhere: s => `${s} — фильм и все дорожки (UTC)`,
+    saveCount: n => `<b>${n}</b> ${ruPlural(n, 'поле', 'поля', 'полей')} будет переписано`,
+    noReencodeV: 'Видео и звук не перекодируются', noReencodeP: 'Изображение не пересжимается',
+    noChanges: 'Изменений нет', pickNew: 'Выберите новую дату или место',
+    tabTracks: n => `Дорожки · ${n}`, tabMeta: 'Все метаданные', tabTree: 'Структура файла',
+    searchKeys: 'Поиск по ключам и значениям…', searchTags: 'Поиск по тегам…',
+    trackTitle: (n, s) => `Дорожка ${n} · ${s}`, handler: 'обработчик',
+    sCodec: 'Кодек / формат', sRes: 'Разрешение', sRate: 'Частота', sChannels: 'Каналы', sSamples: 'Сэмплов',
+    sBitrate: 'Битрейт', sSize: 'Объём', sLang: 'Язык', sCreated: 'Создана', sModified: 'Изменена',
+    secUdta: 'Пользовательские данные · /moov/udta', secHdr: 'Заголовки атомов (UTC, секунды с 1904 г.)', created: ' · создан', modified: ' · изменён',
+    secFtyp: 'Тип файла · ftyp', secFs: 'Файловая система (не часть файла)', fsModified: 'Дата изменения файла',
+    nothingFound: 'Ничего не найдено', noGps: 'GPS-данных нет',
+    ifd0: 'IFD0 · основные', ifdExif: 'ExifIFD · съёмка', ifd1: 'IFD1 · миниатюра',
+    mainImg: 'Основное изображение · ', embImg: n => `Встроенное изображение ${n} · `,
+    createdAt: 'создан ', mdatInfo: 'сжатые видео и звук', primaryItem: n => `основное изображение: item ${n}`,
+  },
+};
+const KEY = 'mediadate.lang';
+let lang = 'en';
+try { const s = localStorage.getItem(KEY); if (s && D[s]) lang = s; } catch { }
+const t = (k, ...a) => { const v = D[lang][k] ?? D.en[k] ?? k; return typeof v === 'function' ? v(...a) : v; };
+return {
+  t, dict: D,
+  get lang() { return lang; },
+  set(l) { if (!D[l]) return; lang = l; try { localStorage.setItem(KEY, l); } catch { } },
+  locale: () => lang === 'ru' ? 'ru-RU' : 'en-US',
+};
+})();
+const tr = I18N.t;
+</script>
 
 <!-- ================= CORE: parsing & writing (no DOM) ================= -->
 <script id="core">
@@ -442,7 +641,7 @@ function hdrTimes(n) { const d = n.data; return d[0] === 1 ? { v: 1, c: u64(d, 4
 function setHdrTimes(d, c, m) {
   const o = d.slice(); const x = dv(o);
   if (o[0] === 1) { x.setUint32(4, Math.floor(c / 4294967296)); x.setUint32(8, c >>> 0); x.setUint32(12, Math.floor(m / 4294967296)); x.setUint32(16, m >>> 0); }
-  else { if (c < 0 || c > 4294967295 || m < 0 || m > 4294967295) throw new Error('Дата вне допустимого диапазона'); x.setUint32(4, c); x.setUint32(8, m); }
+  else { if (c < 0 || c > 4294967295 || m < 0 || m > 4294967295) throw new Error(tr('errDateRange')); x.setUint32(4, c); x.setUint32(8, m); }
   return o;
 }
 function decodeData(t, b) {
@@ -454,9 +653,9 @@ function decodeData(t, b) {
     case 22: return b.length === 1 ? b[0] : b.length === 2 ? d.getUint16(0) : b.length === 4 ? d.getUint32(0) : b.length === 8 ? Number(d.getBigUint64(0)) : hex(b);
     case 23: return +d.getFloat32(0).toPrecision(7);
     case 24: return d.getFloat64(0);
-    case 13: return `[JPEG, ${b.length} байт]`;
-    case 14: return `[PNG, ${b.length} байт]`;
-    default: return `[${b.length} байт] ${hex(b, 16)}`;
+    case 13: return `[JPEG, ${tr('nBytes', b.length)}]`;
+    case 14: return `[PNG, ${tr('nBytes', b.length)}]`;
+    default: return `[${tr('nBytes', b.length)}] ${hex(b, 16)}`;
   }
 }
 const DATA_TYPES = { 0: 'binary', 1: 'UTF-8', 2: 'UTF-16', 13: 'JPEG', 14: 'PNG', 21: 'int', 22: 'uint', 23: 'float32', 24: 'float64', 27: 'BMP' };
@@ -474,23 +673,43 @@ function decodeMeta(meta) {
   return { node: meta, handler, keysNode: kn, keys, ilst: il, items };
 }
 function udtaText(n) { const d = n.data; if (d.length >= 4) { const len = u16(d, 0); if (len + 4 <= d.length && len > 0) return { text: td.decode(d.subarray(4, 4 + len)), lang: u16(d, 2) }; } return null; }
-function mdhdLang(code) { if (code < 0x400) return code ? 'Mac #' + code : '—'; return String.fromCharCode(((code >> 10) & 31) + 0x60, ((code >> 5) & 31) + 0x60, (code & 31) + 0x60); }
+function mdhdLang(code) { if (code < 0x400) return code ? 'Mac #' + code : '—'; const s = String.fromCharCode(((code >> 10) & 31) + 0x60, ((code >> 5) & 31) + 0x60, (code & 31) + 0x60); return /^[a-z]{3}$/.test(s) ? s : '—'; }
 
-const KEY_RU = {
-  'com.apple.quicktime.creationdate': 'Дата съёмки (локальная, с поясом)',
-  'com.apple.quicktime.location.ISO6709': 'Координаты (ISO 6709)',
-  'com.apple.quicktime.location.accuracy.horizontal': 'Точность координат, м',
-  'com.apple.quicktime.make': 'Производитель', 'com.apple.quicktime.model': 'Модель',
-  'com.apple.quicktime.software': 'Версия iOS', 'com.apple.quicktime.content.identifier': 'ID пары Live Photo',
-  'com.apple.quicktime.full-frame-rate-playback-intent': 'Воспроизводить с полной частотой кадров',
-  'com.apple.quicktime.camera.lens_model': 'Объектив', 'com.apple.quicktime.camera.focal_length.35mm_equivalent': 'Фокусное (экв. 35 мм)',
-  'com.apple.quicktime.camera.lens_irisfnumber': 'Диафрагма', 'com.apple.quicktime.video-orientation': 'Ориентация устройства',
-  'com.apple.quicktime.detected-face': 'Обнаруженные лица', 'com.apple.quicktime.live-photo-info': 'Live Photo (служебное)',
-  'com.apple.quicktime.segment-identifier': 'Идентификатор сегмента', 'com.apple.quicktime.still-image-time': 'Кадр фото в Live Photo',
-  'com.apple.quicktime.location.motion': 'Движение устройства', 'com.apple.quicktime.cinematic-video': 'Киноэффект',
-};
-const CODEC = { hvc1: 'HEVC (H.265)', hev1: 'HEVC (H.265)', avc1: 'H.264', avc3: 'H.264', mp4a: 'AAC', alac: 'Apple Lossless', lpcm: 'PCM', sowt: 'PCM', apch: 'ProRes 422 HQ', apcn: 'ProRes 422', apcs: 'ProRes 422 LT', apco: 'ProRes 422 Proxy', ap4h: 'ProRes 4444', ap4x: 'ProRes 4444 XQ', mebx: 'Метаданные', tmcd: 'Таймкод', 'dvh1': 'Dolby Vision HEVC', 'ac-3': 'AC-3', 'ec-3': 'E-AC-3', 'Opus': 'Opus' };
-const HANDLER = { vide: 'Видео', soun: 'Звук', meta: 'Метаданные', tmcd: 'Таймкод', text: 'Текст', sbtl: 'Субтитры', clcp: 'Субтитры', hint: 'Hint' };
+const localized = tbl => new Proxy({}, { get: (_, k) => typeof k === 'string' ? ((tbl[I18N.lang] || tbl.en)[k] ?? tbl.en[k]) : undefined });
+const KEY_LABEL = localized({
+  en: {
+    'com.apple.quicktime.creationdate': 'Capture date (local, with time zone)',
+    'com.apple.quicktime.location.ISO6709': 'Coordinates (ISO 6709)',
+    'com.apple.quicktime.location.accuracy.horizontal': 'Location accuracy, m',
+    'com.apple.quicktime.make': 'Make', 'com.apple.quicktime.model': 'Model',
+    'com.apple.quicktime.software': 'iOS version', 'com.apple.quicktime.content.identifier': 'Live Photo pair ID',
+    'com.apple.quicktime.full-frame-rate-playback-intent': 'Play at full frame rate',
+    'com.apple.quicktime.camera.lens_model': 'Lens', 'com.apple.quicktime.camera.focal_length.35mm_equivalent': 'Focal length (35 mm equiv.)',
+    'com.apple.quicktime.camera.lens_irisfnumber': 'Aperture', 'com.apple.quicktime.video-orientation': 'Device orientation',
+    'com.apple.quicktime.detected-face': 'Detected faces', 'com.apple.quicktime.live-photo-info': 'Live Photo (internal)',
+    'com.apple.quicktime.segment-identifier': 'Segment ID', 'com.apple.quicktime.still-image-time': 'Live Photo still frame',
+    'com.apple.quicktime.location.motion': 'Device motion', 'com.apple.quicktime.cinematic-video': 'Cinematic mode',
+  },
+  ru: {
+    'com.apple.quicktime.creationdate': 'Дата съёмки (локальная, с поясом)',
+    'com.apple.quicktime.location.ISO6709': 'Координаты (ISO 6709)',
+    'com.apple.quicktime.location.accuracy.horizontal': 'Точность координат, м',
+    'com.apple.quicktime.make': 'Производитель', 'com.apple.quicktime.model': 'Модель',
+    'com.apple.quicktime.software': 'Версия iOS', 'com.apple.quicktime.content.identifier': 'ID пары Live Photo',
+    'com.apple.quicktime.full-frame-rate-playback-intent': 'Воспроизводить с полной частотой кадров',
+    'com.apple.quicktime.camera.lens_model': 'Объектив', 'com.apple.quicktime.camera.focal_length.35mm_equivalent': 'Фокусное (экв. 35 мм)',
+    'com.apple.quicktime.camera.lens_irisfnumber': 'Диафрагма', 'com.apple.quicktime.video-orientation': 'Ориентация устройства',
+    'com.apple.quicktime.detected-face': 'Обнаруженные лица', 'com.apple.quicktime.live-photo-info': 'Live Photo (служебное)',
+    'com.apple.quicktime.segment-identifier': 'Идентификатор сегмента', 'com.apple.quicktime.still-image-time': 'Кадр фото в Live Photo',
+    'com.apple.quicktime.location.motion': 'Движение устройства', 'com.apple.quicktime.cinematic-video': 'Киноэффект',
+  },
+});
+const CODEC_BASE = { hvc1: 'HEVC (H.265)', hev1: 'HEVC (H.265)', avc1: 'H.264', avc3: 'H.264', mp4a: 'AAC', alac: 'Apple Lossless', lpcm: 'PCM', sowt: 'PCM', apch: 'ProRes 422 HQ', apcn: 'ProRes 422', apcs: 'ProRes 422 LT', apco: 'ProRes 422 Proxy', ap4h: 'ProRes 4444', ap4x: 'ProRes 4444 XQ', 'dvh1': 'Dolby Vision HEVC', 'ac-3': 'AC-3', 'ec-3': 'E-AC-3', 'Opus': 'Opus' };
+const CODEC = localized({ en: { ...CODEC_BASE, mebx: 'Metadata', tmcd: 'Timecode' }, ru: { ...CODEC_BASE, mebx: 'Метаданные', tmcd: 'Таймкод' } });
+const HANDLER = localized({
+  en: { vide: 'Video', soun: 'Audio', meta: 'Metadata', tmcd: 'Timecode', text: 'Text', sbtl: 'Subtitles', clcp: 'Closed captions', hint: 'Hint' },
+  ru: { vide: 'Видео', soun: 'Звук', meta: 'Метаданные', tmcd: 'Таймкод', text: 'Текст', sbtl: 'Субтитры', clcp: 'Субтитры', hint: 'Hint' },
+});
 
 /* ---------- VIDEO ---------- */
 async function parseVideo(file) {
@@ -505,7 +724,7 @@ async function parseVideo(file) {
     tops.push(t); o += size;
   }
   const mt = tops.find(t => t.type === 'moov');
-  if (!mt) throw new Error('В файле нет блока moov — это не похоже на видео QuickTime/MP4.');
+  if (!mt) throw new Error(tr('errNoMoov'));
   const buf = await readSlice(file, mt.off, mt.off + mt.size);
   const moov = { type: 'moov', typeBytes: buf.slice(4, 8), off: mt.off, size: mt.size, hl: mt.hl, path: '/moov', prefix: new Uint8Array(0) };
   moov.children = parseBoxes(buf, mt.hl, mt.size, mt.off, '/moov', 'moov');
@@ -516,13 +735,13 @@ async function parseVideo(file) {
   if (mvhd) {
     const d = mvhd.data, v1 = d[0] === 1;
     M.timescale = u32(d, v1 ? 20 : 12); M.durationSec = (v1 ? u64(d, 24) : u32(d, 16)) / M.timescale;
-    M.hdr.push({ node: mvhd, label: 'Фильм (mvhd)', ...hdrTimes(mvhd) });
+    M.hdr.push({ node: mvhd, label: tr('hdrMovie'), ...hdrTimes(mvhd) });
   }
-  const mm = child(moov, 'meta'); if (mm) { M.movieMeta = decodeMeta(mm); M.metas.push({ title: 'QuickTime-метаданные файла', path: '/moov/meta', meta: M.movieMeta }); }
+  const mm = child(moov, 'meta'); if (mm) { M.movieMeta = decodeMeta(mm); M.metas.push({ title: tr('metaQt'), path: '/moov/meta', meta: M.movieMeta }); }
   const ud = child(moov, 'udta');
   if (ud) for (const c of ud.children) {
-    if (c.type === 'meta') { const dm = decodeMeta(c); M.metas.push({ title: 'iTunes-метаданные (udta/meta)', path: c.path, meta: dm }); M.udtaMeta = dm; }
-    else if (c.data) { const t = udtaText(c); M.udta.push({ node: c, key: c.type, value: t ? t.text : `[${c.data.length} байт] ${hex(c.data, 12)}`, text: t }); }
+    if (c.type === 'meta') { const dm = decodeMeta(c); M.metas.push({ title: tr('metaItunes'), path: c.path, meta: dm }); M.udtaMeta = dm; }
+    else if (c.data) { const t = udtaText(c); M.udta.push({ node: c, key: c.type, value: t ? t.text : `[${tr('nBytes', c.data.length)}] ${hex(c.data, 12)}`, text: t }); }
   }
 
   children(moov, 'trak').forEach((trak, i) => {
@@ -535,14 +754,14 @@ async function parseVideo(file) {
         T.rotation = Math.round(Math.atan2(b, a) * 180 / Math.PI);
         T.w = u32(d, mo + 36) / 65536; T.h = u32(d, mo + 40) / 65536;
       }
-      M.hdr.push({ node: tkhd, label: `Дорожка ${i + 1} (tkhd)`, ...hdrTimes(tkhd) });
+      M.hdr.push({ node: tkhd, label: tr('hdrTrack', i + 1), ...hdrTimes(tkhd) });
       T.created = hdrTimes(tkhd).c; T.modified = hdrTimes(tkhd).m;
     }
     const mdia = child(trak, 'mdia'), mdhd = child(mdia, 'mdhd'), hd = child(mdia, 'hdlr');
     if (mdhd) {
       const d = mdhd.data, v1 = d[0] === 1;
       T.timescale = u32(d, v1 ? 20 : 12); T.duration = (v1 ? u64(d, 24) : u32(d, 16)) / T.timescale; T.lang = mdhdLang(u16(d, v1 ? 32 : 20));
-      M.hdr.push({ node: mdhd, label: `Дорожка ${i + 1}, медиа (mdhd)`, ...hdrTimes(mdhd) });
+      M.hdr.push({ node: mdhd, label: tr('hdrTrackMedia', i + 1), ...hdrTimes(mdhd) });
     }
     const hi = hdrlOrEmpty(hd); T.handler = hi.sub; T.handlerName = hi.name;
     const stbl = child(child(mdia, 'minf'), 'stbl');
@@ -558,7 +777,7 @@ async function parseVideo(file) {
     if (stsz) { const d = stsz.data, ss = u32(d, 4), cnt = u32(d, 8); T.samples = cnt; let tot = 0; if (ss) tot = ss * cnt; else for (let k = 0; k < cnt && 12 + 4 * k + 4 <= d.length; k++) tot += u32(d, 12 + 4 * k); T.bytes = tot; }
     if (T.duration && T.samples && T.handler === 'vide') T.fps = T.samples / T.duration;
     if (T.duration && T.bytes) T.bitrate = T.bytes * 8 / T.duration;
-    const tm = child(trak, 'meta'); if (tm) { T.meta = decodeMeta(tm); M.metas.push({ title: `Метаданные дорожки ${i + 1}`, path: tm.path, meta: T.meta }); }
+    const tm = child(trak, 'meta'); if (tm) { T.meta = decodeMeta(tm); M.metas.push({ title: tr('metaTrack', i + 1), path: tm.path, meta: T.meta }); }
     M.tracks.push(T);
   });
 
@@ -577,10 +796,10 @@ async function parseVideo(file) {
     M.date = { local: cd.naive, off, offKnown: cd.off != null, source: 'com.apple.quicktime.creationdate', raw: cdItem.value };
   } else if (mvhd && hdrTimes(mvhd).c > 0) {
     const utc = qtToMs(hdrTimes(mvhd).c); const off = defaultOff(utc);
-    M.date = { local: utc + off * 60000, off, offKnown: false, source: 'moov/mvhd (UTC, без часового пояса)' };
+    M.date = { local: utc + off * 60000, off, offKnown: false, source: tr('srcMvhd') };
   } else {
     const utc = Math.floor(file.lastModified / 1000) * 1000, off = defaultOff(utc);
-    M.date = { local: utc + off * 60000, off, offKnown: false, source: 'дата файла — в метаданных даты нет' };
+    M.date = { local: utc + off * 60000, off, offKnown: false, source: tr('srcFile') };
   }
   // location
   const locItem = M.movieMeta?.items.find(x => x.key === 'com.apple.quicktime.location.ISO6709');
@@ -600,7 +819,7 @@ function planVideo(M, E) {
   if (dS !== 0 || M.hdr.some(h => h.c === 0)) for (const h of M.hdr) {
     const unset = h.c === 0; if (!unset && dS === 0) continue;
     const nc = unset ? newS : h.c + dS, nm = unset ? newS + Math.round(M.durationSec || 0) : h.m + dS;
-    ch.push({ group: 'Дата', label: h.label, where: h.node.path, from: unset ? '— не задано (0) —' : fmtUtc(qtToMs(h.c)), to: fmtUtc(qtToMs(nc)),
+    ch.push({ group: tr('grpDate'), label: h.label, where: h.node.path, from: unset ? tr('notSet') : fmtUtc(qtToMs(h.c)), to: fmtUtc(qtToMs(nc)),
       apply: ov => ov.set(h.node, setHdrTimes(h.node.data, nc, nm)) });
   }
   if (dS !== 0 || offChanged) {
@@ -612,17 +831,17 @@ function planVideo(M, E) {
       if (it.key === 'com.apple.quicktime.creationdate') hasCd = true;
       const fUtc = p.naive - (p.off ?? M.date.off) * 60000;
       const nv = fmtIsoLike(it.value, fUtc + dU, E.off);
-      if (nv !== it.value) ch.push({ group: 'Дата', label: KEY_RU[it.key] || it.key, where: it.key, from: it.value, to: nv,
+      if (nv !== it.value) ch.push({ group: tr('grpDate'), label: KEY_LABEL[it.key] || it.key, where: it.key, from: it.value, to: nv,
         apply: ov => ov.set(it.dataNode, concat([it.dataNode.data.subarray(0, 8), te.encode(nv)])) });
     }
     for (const u of M.udta) if (u.key === '©day' && u.text) {
       const p = parseIso(u.text.text); if (!p) continue;
       const nv = fmtIsoLike(u.text.text, p.naive - (p.off ?? M.date.off) * 60000 + dU, E.off);
-      ch.push({ group: 'Дата', label: 'Дата (udta ©day)', where: u.node.path, from: u.text.text, to: nv, apply: ov => ov.set(u.node, udtaPayload(nv, u.text.lang)) });
+      ch.push({ group: tr('grpDate'), label: tr('udtaDay'), where: u.node.path, from: u.text.text, to: nv, apply: ov => ov.set(u.node, udtaPayload(nv, u.text.lang)) });
     }
     if (!hasCd) {
       const nv = fmtIsoLike('2000-01-01T00:00:00+0000', newUtc, E.off);
-      ch.push({ group: 'Дата', label: KEY_RU['com.apple.quicktime.creationdate'], where: 'com.apple.quicktime.creationdate (новый ключ)', from: '— нет —', to: nv,
+      ch.push({ group: tr('grpDate'), label: KEY_LABEL['com.apple.quicktime.creationdate'], where: tr('newKey', 'com.apple.quicktime.creationdate'), from: tr('none'), to: nv,
         apply: (ov, ctx) => addKey(M, ov, ctx, 'com.apple.quicktime.creationdate', te.encode(nv)) });
     }
   }
@@ -631,9 +850,9 @@ function planVideo(M, E) {
     const same = O && Math.abs(O.lat - L.lat) < 5e-6 && Math.abs(O.lon - L.lon) < 5e-6 && ((O.alt == null && L.alt == null) || (O.alt != null && L.alt != null && Math.abs(O.alt - L.alt) < 5e-4));
     if (!same) {
       const it = M.movieMeta?.items.find(x => x.key === 'com.apple.quicktime.location.ISO6709');
-      if (it && it.dataNode) { const nv = fmt6709(it.value, L.lat, L.lon, L.alt); ch.push({ group: 'Место', label: KEY_RU[it.key], where: it.key, from: it.value, to: nv, apply: ov => ov.set(it.dataNode, concat([it.dataNode.data.subarray(0, 8), te.encode(nv)])) }); }
-      else { const nv = fmt6709(null, L.lat, L.lon, L.alt); ch.push({ group: 'Место', label: KEY_RU['com.apple.quicktime.location.ISO6709'], where: 'com.apple.quicktime.location.ISO6709 (новый ключ)', from: '— нет —', to: nv, apply: (ov, ctx) => addKey(M, ov, ctx, 'com.apple.quicktime.location.ISO6709', te.encode(nv)) }); }
-      for (const u of M.udta) if (u.key === '©xyz' && u.text) { const nv = fmt6709(u.text.text, L.lat, L.lon, L.alt); ch.push({ group: 'Место', label: 'Координаты (udta ©xyz)', where: u.node.path, from: u.text.text, to: nv, apply: ov => ov.set(u.node, udtaPayload(nv, u.text.lang)) }); }
+      if (it && it.dataNode) { const nv = fmt6709(it.value, L.lat, L.lon, L.alt); ch.push({ group: tr('grpPlace'), label: KEY_LABEL[it.key], where: it.key, from: it.value, to: nv, apply: ov => ov.set(it.dataNode, concat([it.dataNode.data.subarray(0, 8), te.encode(nv)])) }); }
+      else { const nv = fmt6709(null, L.lat, L.lon, L.alt); ch.push({ group: tr('grpPlace'), label: KEY_LABEL['com.apple.quicktime.location.ISO6709'], where: tr('newKey', 'com.apple.quicktime.location.ISO6709'), from: tr('none'), to: nv, apply: (ov, ctx) => addKey(M, ov, ctx, 'com.apple.quicktime.location.ISO6709', te.encode(nv)) }); }
+      for (const u of M.udta) if (u.key === '©xyz' && u.text) { const nv = fmt6709(u.text.text, L.lat, L.lon, L.alt); ch.push({ group: tr('grpPlace'), label: tr('udtaXyz'), where: u.node.path, from: u.text.text, to: nv, apply: ov => ov.set(u.node, udtaPayload(nv, u.text.lang)) }); }
     }
   }
   return ch;
@@ -652,7 +871,7 @@ function addKey(M, ov, ctx, name, valueBytes) {
     }
   }
   const { keysNode, ilst } = ctx.meta;
-  if (!keysNode || !ilst) throw new Error('Не удалось добавить ключ: неожиданная структура moov/meta');
+  if (!keysNode || !ilst) throw new Error(tr('errAddKey'));
   const kd = ov.get(keysNode) || keysNode.data; const nb = te.encode(name);
   const entry = concat([be32(8 + nb.length), ascii('mdta'), nb]);
   const nk = concat([kd, entry]); dv(nk).setUint32(4, u32(kd, 4) + 1);
@@ -684,13 +903,16 @@ async function buildVideo(M, changes) {
 /* ---------- PHOTO (EXIF/TIFF, XMP in JPEG & HEIC) ---------- */
 const TYPE_SIZE = { 1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 6: 1, 7: 1, 8: 2, 9: 4, 10: 8, 11: 4, 12: 8, 13: 4 };
 const TAGS = {
-  IFD0: { 0x010E: 'ImageDescription', 0x010F: 'Make', 0x0110: 'Model', 0x0112: 'Orientation', 0x011A: 'XResolution', 0x011B: 'YResolution', 0x0128: 'ResolutionUnit', 0x0131: 'Software', 0x0132: 'DateTime', 0x013B: 'Artist', 0x013C: 'HostComputer', 0x0213: 'YCbCrPositioning', 0x8298: 'Copyright', 0x8769: 'ExifIFD (указатель)', 0x8825: 'GPS IFD (указатель)', 0x0100: 'ImageWidth', 0x0101: 'ImageHeight', 0x0103: 'Compression', 0x0201: 'ThumbnailOffset', 0x0202: 'ThumbnailLength' },
-  Exif: { 0x829A: 'ExposureTime', 0x829D: 'FNumber', 0x8822: 'ExposureProgram', 0x8827: 'ISO', 0x8830: 'SensitivityType', 0x9000: 'ExifVersion', 0x9003: 'DateTimeOriginal', 0x9004: 'DateTimeDigitized', 0x9010: 'OffsetTime', 0x9011: 'OffsetTimeOriginal', 0x9012: 'OffsetTimeDigitized', 0x9101: 'ComponentsConfiguration', 0x9201: 'ShutterSpeedValue', 0x9202: 'ApertureValue', 0x9203: 'BrightnessValue', 0x9204: 'ExposureBiasValue', 0x9207: 'MeteringMode', 0x9209: 'Flash', 0x920A: 'FocalLength', 0x9214: 'SubjectArea', 0x927C: 'MakerNote', 0x9286: 'UserComment', 0x9290: 'SubSecTime', 0x9291: 'SubSecTimeOriginal', 0x9292: 'SubSecTimeDigitized', 0xA000: 'FlashpixVersion', 0xA001: 'ColorSpace', 0xA002: 'PixelXDimension', 0xA003: 'PixelYDimension', 0xA005: 'InteropIFD (указатель)', 0xA217: 'SensingMethod', 0xA301: 'SceneType', 0xA402: 'ExposureMode', 0xA403: 'WhiteBalance', 0xA404: 'DigitalZoomRatio', 0xA405: 'FocalLengthIn35mmFilm', 0xA406: 'SceneCaptureType', 0xA432: 'LensSpecification', 0xA433: 'LensMake', 0xA434: 'LensModel', 0xA460: 'CompositeImage' },
+  IFD0: { 0x010E: 'ImageDescription', 0x010F: 'Make', 0x0110: 'Model', 0x0112: 'Orientation', 0x011A: 'XResolution', 0x011B: 'YResolution', 0x0128: 'ResolutionUnit', 0x0131: 'Software', 0x0132: 'DateTime', 0x013B: 'Artist', 0x013C: 'HostComputer', 0x0213: 'YCbCrPositioning', 0x8298: 'Copyright', 0x8769: 'ExifIFD (pointer)', 0x8825: 'GPS IFD (pointer)', 0x0100: 'ImageWidth', 0x0101: 'ImageHeight', 0x0103: 'Compression', 0x0201: 'ThumbnailOffset', 0x0202: 'ThumbnailLength' },
+  Exif: { 0x829A: 'ExposureTime', 0x829D: 'FNumber', 0x8822: 'ExposureProgram', 0x8827: 'ISO', 0x8830: 'SensitivityType', 0x9000: 'ExifVersion', 0x9003: 'DateTimeOriginal', 0x9004: 'DateTimeDigitized', 0x9010: 'OffsetTime', 0x9011: 'OffsetTimeOriginal', 0x9012: 'OffsetTimeDigitized', 0x9101: 'ComponentsConfiguration', 0x9201: 'ShutterSpeedValue', 0x9202: 'ApertureValue', 0x9203: 'BrightnessValue', 0x9204: 'ExposureBiasValue', 0x9207: 'MeteringMode', 0x9209: 'Flash', 0x920A: 'FocalLength', 0x9214: 'SubjectArea', 0x927C: 'MakerNote', 0x9286: 'UserComment', 0x9290: 'SubSecTime', 0x9291: 'SubSecTimeOriginal', 0x9292: 'SubSecTimeDigitized', 0xA000: 'FlashpixVersion', 0xA001: 'ColorSpace', 0xA002: 'PixelXDimension', 0xA003: 'PixelYDimension', 0xA005: 'InteropIFD (pointer)', 0xA217: 'SensingMethod', 0xA301: 'SceneType', 0xA402: 'ExposureMode', 0xA403: 'WhiteBalance', 0xA404: 'DigitalZoomRatio', 0xA405: 'FocalLengthIn35mmFilm', 0xA406: 'SceneCaptureType', 0xA432: 'LensSpecification', 0xA433: 'LensMake', 0xA434: 'LensModel', 0xA460: 'CompositeImage' },
   GPS: { 0x0000: 'GPSVersionID', 0x0001: 'GPSLatitudeRef', 0x0002: 'GPSLatitude', 0x0003: 'GPSLongitudeRef', 0x0004: 'GPSLongitude', 0x0005: 'GPSAltitudeRef', 0x0006: 'GPSAltitude', 0x0007: 'GPSTimeStamp', 0x000C: 'GPSSpeedRef', 0x000D: 'GPSSpeed', 0x000E: 'GPSTrackRef', 0x000F: 'GPSTrack', 0x0010: 'GPSImgDirectionRef', 0x0011: 'GPSImgDirection', 0x0017: 'GPSDestBearingRef', 0x0018: 'GPSDestBearing', 0x001D: 'GPSDateStamp', 0x001F: 'GPSHPositioningError' },
   Interop: { 0x0001: 'InteropIndex', 0x0002: 'InteropVersion' },
 };
 TAGS.IFD1 = TAGS.IFD0;
-const TAG_RU = { DateTime: 'Дата изменения', DateTimeOriginal: 'Дата съёмки', DateTimeDigitized: 'Дата оцифровки', OffsetTime: 'Пояс для DateTime', OffsetTimeOriginal: 'Пояс для даты съёмки', OffsetTimeDigitized: 'Пояс для даты оцифровки', GPSDateStamp: 'GPS-дата (UTC)', GPSTimeStamp: 'GPS-время (UTC)', GPSLatitude: 'Широта', GPSLongitude: 'Долгота', GPSAltitude: 'Высота', GPSLatitudeRef: 'Полушарие (С/Ю)', GPSLongitudeRef: 'Полушарие (В/З)', GPSAltitudeRef: 'Выше/ниже уровня моря', SubSecTimeOriginal: 'Доли секунды съёмки' };
+const TAG_LABEL = localized({
+  en: { DateTime: 'Modification date', DateTimeOriginal: 'Capture date', DateTimeDigitized: 'Digitized date', OffsetTime: 'Time zone for DateTime', OffsetTimeOriginal: 'Time zone for capture date', OffsetTimeDigitized: 'Time zone for digitized date', GPSDateStamp: 'GPS date (UTC)', GPSTimeStamp: 'GPS time (UTC)', GPSLatitude: 'Latitude', GPSLongitude: 'Longitude', GPSAltitude: 'Altitude', GPSLatitudeRef: 'Hemisphere (N/S)', GPSLongitudeRef: 'Hemisphere (E/W)', GPSAltitudeRef: 'Above/below sea level', SubSecTimeOriginal: 'Capture sub-seconds' },
+  ru: { DateTime: 'Дата изменения', DateTimeOriginal: 'Дата съёмки', DateTimeDigitized: 'Дата оцифровки', OffsetTime: 'Пояс для DateTime', OffsetTimeOriginal: 'Пояс для даты съёмки', OffsetTimeDigitized: 'Пояс для даты оцифровки', GPSDateStamp: 'GPS-дата (UTC)', GPSTimeStamp: 'GPS-время (UTC)', GPSLatitude: 'Широта', GPSLongitude: 'Долгота', GPSAltitude: 'Высота', GPSLatitudeRef: 'Полушарие (С/Ю)', GPSLongitudeRef: 'Полушарие (В/З)', GPSAltitudeRef: 'Выше/ниже уровня моря', SubSecTimeOriginal: 'Доли секунды съёмки' },
+});
 
 function region(bytes, extents) { // extents: [{fo,len}] in file coords; bytes = concatenated logical data
   return { bytes, map: lo => { let acc = 0; for (const e of extents) { if (lo < acc + e.len) return e.fo + (lo - acc); acc += e.len; } throw new Error('offset out of region'); } };
@@ -739,17 +961,17 @@ function readVal(b, le, t) {
 const rat = r => r[1] ? r[0] / r[1] : 0;
 const dms = rs => rat(rs[0]) + rat(rs[1]) / 60 + rat(rs[2]) / 3600;
 function prettyTag(t) {
-  const v = t.value; if (v === undefined) return '(вне блока)';
-  if (t.name === 'MakerNote') { const s = td.decode(v.subarray ? v.subarray(0, 9) : new Uint8Array(0)); return s === 'Apple iOS' ? `Apple iOS MakerNote (${t.count} байт)` : `[${t.count} байт]`; }
-  if (t.type === 7 || t.type === 1 || t.type === 6) { if (/Version$/.test(t.name) || t.name === 'InteropVersion') return td.decode(v); if (t.name === 'UserComment') return td.decode(v.subarray(8)).replace(/\0+$/, '') || '—'; if (t.name === 'GPSVersionID') return Array.from(v).join('.'); return `[${t.count} байт] ${hex(v, 12)}`; }
+  const v = t.value; if (v === undefined) return tr('outOfBlock');
+  if (t.name === 'MakerNote') { const s = td.decode(v.subarray ? v.subarray(0, 9) : new Uint8Array(0)); return s === 'Apple iOS' ? `Apple iOS MakerNote (${tr('nBytes', t.count)})` : `[${tr('nBytes', t.count)}]`; }
+  if (t.type === 7 || t.type === 1 || t.type === 6) { if (/Version$/.test(t.name) || t.name === 'InteropVersion') return td.decode(v); if (t.name === 'UserComment') return td.decode(v.subarray(8)).replace(/\0+$/, '') || '—'; if (t.name === 'GPSVersionID') return Array.from(v).join('.'); return `[${tr('nBytes', t.count)}] ${hex(v, 12)}`; }
   if (t.type === 2) return v;
   if (t.type === 5 || t.type === 10) {
-    if (t.name === 'ExposureTime') { const x = rat(v[0]); return x < 1 && x > 0 ? `1/${Math.round(1 / x)} с` : `${x} с`; }
+    if (t.name === 'ExposureTime') { const x = rat(v[0]); return x < 1 && x > 0 ? `1/${Math.round(1 / x)} ${tr('uSec')}` : `${x} ${tr('uSec')}`; }
     if (t.name === 'FNumber') return 'f/' + +rat(v[0]).toFixed(2);
-    if (t.name === 'FocalLength') return +rat(v[0]).toFixed(2) + ' мм';
+    if (t.name === 'FocalLength') return +rat(v[0]).toFixed(2) + ' ' + tr('uMm');
     if (t.name === 'GPSLatitude' || t.name === 'GPSLongitude') return dms(v).toFixed(6) + '°';
     if (t.name === 'GPSTimeStamp') return v.map(rat).map((x, i) => i < 2 ? pad(x) : (x < 10 ? '0' : '') + +x.toFixed(3)).join(':');
-    if (t.name === 'GPSAltitude') return +rat(v[0]).toFixed(2) + ' м';
+    if (t.name === 'GPSAltitude') return +rat(v[0]).toFixed(2) + ' ' + tr('uM');
     return v.map(r => r[1] === 1 ? r[0] : +rat(r).toFixed(4)).join(', ');
   }
   if (Array.isArray(v)) return v.length > 12 ? v.slice(0, 12).join(', ') + ' …' : v.join(', ');
@@ -758,17 +980,17 @@ function prettyTag(t) {
 function parseAppleMakerNote(raw) {
   if (!raw || raw.length < 16 || td.decode(raw.subarray(0, 9)) !== 'Apple iOS') return [];
   const out = [], d = dv(raw); let n; try { n = d.getUint16(14); } catch { return out; }
-  const NAMES = { 0x0003: 'RunTime (аптайм устройства, bplist)', 0x0008: 'AccelerationVector', 0x000A: 'HDRImageType', 0x000B: 'BurstUUID', 0x0011: 'ContentIdentifier (пара Live Photo)', 0x0015: 'ImageUniqueID', 0x0017: 'LivePhotoVideoIndex', 0x002E: 'CameraType', 0x002F: 'FocusPosition' };
+  const NAMES = { 0x0003: tr('mnRuntime'), 0x0008: 'AccelerationVector', 0x000A: 'HDRImageType', 0x000B: 'BurstUUID', 0x0011: tr('mnContentId'), 0x0015: 'ImageUniqueID', 0x0017: 'LivePhotoVideoIndex', 0x002E: 'CameraType', 0x002F: 'FocusPosition' };
   for (let i = 0; i < n; i++) {
     const e = 16 + i * 12; if (e + 12 > raw.length) break;
     const tag = d.getUint16(e), type = d.getUint16(e + 2), count = d.getUint32(e + 4), sz = (TYPE_SIZE[type] || 1) * count;
     const vo = sz <= 4 ? e + 8 : d.getUint32(e + 8); let val;
-    if (vo + sz > raw.length) val = '(вне блока)';
+    if (vo + sz > raw.length) val = tr('outOfBlock');
     else if (type === 2) val = td.decode(raw.subarray(vo, vo + count)).replace(/\0.*$/s, '');
     else if (type === 9 || type === 4) { const a = []; for (let k = 0; k < Math.min(count, 8); k++) a.push(type === 9 ? d.getInt32(vo + 4 * k) : d.getUint32(vo + 4 * k)); val = a.join(', '); }
     else if (type === 10 || type === 5) { const a = []; for (let k = 0; k < Math.min(count, 8); k++) { const nn = type === 10 ? d.getInt32(vo + 8 * k) : d.getUint32(vo + 8 * k), dd = type === 10 ? d.getInt32(vo + 8 * k + 4) : d.getUint32(vo + 8 * k + 4); a.push(dd ? +(nn / dd).toFixed(4) : 0); } val = a.join(', '); }
     else if (type === 3) { const a = []; for (let k = 0; k < Math.min(count, 8); k++) a.push(d.getUint16(vo + 2 * k)); val = a.join(', '); }
-    else val = `[${sz} байт]` + (td.decode(raw.subarray(vo, vo + 6)) === 'bplist' ? ' bplist' : '');
+    else val = `[${tr('nBytes', sz)}]` + (td.decode(raw.subarray(vo, vo + 6)) === 'bplist' ? ' bplist' : '');
     out.push({ tag, name: NAMES[tag] || 'Apple 0x' + tag.toString(16).padStart(4, '0'), value: val });
   }
   return out;
@@ -792,11 +1014,11 @@ async function parsePhoto(file, fmt) {
       }
     }
     // segment list for structure tab (main image)
-    let o = 2; while (o + 4 <= bytes.length && bytes[o] === 0xFF) { const mk = bytes[o + 1]; if (mk === 0xD8 || (mk >= 0xD0 && mk <= 0xD7)) { o += 2; continue; } const len = u16(bytes, o + 2); let label = ''; if (mk >= 0xE0 && mk <= 0xEF) label = td.decode(bytes.subarray(o + 4, o + 4 + Math.min(len - 2, 30))).replace(/[^\x20-\x7e].*$/s, ''); P.structure.push({ type: 'FF' + mk.toString(16).toUpperCase() + ' ' + (JPEG_MARK[mk] || ''), size: len + 2, info: label }); if (mk === 0xDA) { P.structure.push({ type: 'данные изображения', size: bytes.length - o - 2 - len, info: '' }); break; } o += 2 + len; }
+    let o = 2; while (o + 4 <= bytes.length && bytes[o] === 0xFF) { const mk = bytes[o + 1]; if (mk === 0xD8 || (mk >= 0xD0 && mk <= 0xD7)) { o += 2; continue; } const len = u16(bytes, o + 2); let label = ''; if (mk >= 0xE0 && mk <= 0xEF) label = td.decode(bytes.subarray(o + 4, o + 4 + Math.min(len - 2, 30))).replace(/[^\x20-\x7e].*$/s, ''); P.structure.push({ type: 'FF' + mk.toString(16).toUpperCase() + ' ' + (JPEG_MARK[mk] || ''), size: len + 2, info: label }); if (mk === 0xDA) { P.structure.push({ type: tr('imageData'), size: bytes.length - o - 2 - len, info: '' }); break; } o += 2 + len; }
   } else {
     const tops = parseBoxes(bytes, 0, bytes.length, 0, '', null);
     P.tree = tops;
-    const meta = tops.find(t => t.type === 'meta'); if (!meta) throw new Error('В HEIC нет блока meta.');
+    const meta = tops.find(t => t.type === 'meta'); if (!meta) throw new Error(tr('errNoHeicMeta'));
     const iinf = child(meta, 'iinf'), iloc = child(meta, 'iloc'), idat = child(meta, 'idat'), pitm = child(meta, 'pitm');
     const items = new Map();
     if (iinf) { const d = iinf.data, v = d[0]; const cnt = v === 0 ? u16(d, 4) : u32(d, 4); let p = v === 0 ? 6 : 8;
@@ -825,7 +1047,7 @@ async function parsePhoto(file, fmt) {
   if (naive != null) {
     let off = srcName === 'DateTimeOriginal' ? oto ?? ot : srcName === 'DateTimeDigitized' ? otd ?? ot : ot;
     let offKnown = off != null, offFrom = 'EXIF OffsetTime';
-    if (off == null) { const gu = gpsUtc(X); if (gu != null) { const m = Math.round((naive - gu) / 60000 / 15) * 15; if (Math.abs(m) <= 14 * 60) { off = m; offKnown = true; offFrom = 'вычислен по GPS-времени'; } } }
+    if (off == null) { const gu = gpsUtc(X); if (gu != null) { const m = Math.round((naive - gu) / 60000 / 15) * 15; if (Math.abs(m) <= 14 * 60) { off = m; offKnown = true; offFrom = tr('offFromGps'); } } }
     if (off == null) off = defaultOff(naive);
     P.date = { local: naive, off, offKnown, offFrom, source: 'EXIF ' + srcName };
   } else {
@@ -839,7 +1061,7 @@ async function parsePhoto(file, fmt) {
     const at = X.get('GPS', 6); const alt = at ? rat(at.value[0]) * ((g('GPS', 5)?.[0] === 1) ? -1 : 1) : null;
     P.loc = { lat: la, lon: lo, alt, acc: X.get('GPS', 0x1F) ? rat(X.get('GPS', 0x1F).value[0]) : null, source: 'EXIF GPS' };
   }
-  P.locEditable = !!P.loc; P.locReason = P.loc ? '' : 'В фото нет GPS-блока: добавить координаты без пересборки EXIF нельзя, поэтому редактирование места отключено.';
+  P.locEditable = !!P.loc; P.locReason = P.loc ? '' : tr('noGpsReason');
   return P;
 }
 const JPEG_MARK = { 0xE0: 'APP0', 0xE1: 'APP1', 0xE2: 'APP2', 0xED: 'APP13', 0xEE: 'APP14', 0xDB: 'DQT', 0xC0: 'SOF0', 0xC2: 'SOF2', 0xC4: 'DHT', 0xDA: 'SOS', 0xDD: 'DRI', 0xFE: 'COM' };
@@ -867,24 +1089,24 @@ function planPhoto(P, E) {
   const many = P.exifs.length > 1;
   P.exifs.forEach((T, ei) => {
     const tag = (i, t) => T.get(i, t);
-    const pfx = many ? (ei === 0 ? 'Основное изображение › ' : `Встроенное изображение ${ei} › `) : '';
+    const pfx = many ? (ei === 0 ? tr('mainImage') : tr('embImage', ei)) : '';
     const add = (label, where, from, to, off, b) => ch.push({ group: label.g, label: label.t, where: pfx + where, from, to, patches: [{ R: T.R, off, bytes: b }] });
     if (dateOn) {
       const pairs = [[tag('IFD0', 0x0132), tag('Exif', 0x9010), 'IFD0'], [tag('Exif', 0x9003), tag('Exif', 0x9011), 'ExifIFD'], [tag('Exif', 0x9004), tag('Exif', 0x9012), 'ExifIFD']];
       for (const [dt, ot, w] of pairs) {
         if (!dt) continue; const nv0 = parseExifDate(dt.value); if (nv0 == null || dt.count < 20) continue;
         const own = parseOff(ot?.value) ?? P.date.off; const nv = fmtExifDate(nv0 - own * 60000 + dU + E.off * 60000);
-        if (nv !== dt.value) add({ g: 'Дата', t: dt.name }, w, dt.value, nv, dt.vo, ascii(nv));
+        if (nv !== dt.value) add({ g: tr('grpDate'), t: dt.name }, w, dt.value, nv, dt.vo, ascii(nv));
       }
-      if (offChanged) for (const t of [tag('Exif', 0x9010), tag('Exif', 0x9011), tag('Exif', 0x9012)]) if (t && t.count >= 7 && parseOff(t.value) != null) { const nv = offStr(E.off); if (nv !== t.value) add({ g: 'Дата', t: t.name }, 'ExifIFD', t.value, nv, t.vo, ascii(nv)); }
+      if (offChanged) for (const t of [tag('Exif', 0x9010), tag('Exif', 0x9011), tag('Exif', 0x9012)]) if (t && t.count >= 7 && parseOff(t.value) != null) { const nv = offStr(E.off); if (nv !== t.value) add({ g: tr('grpDate'), t: t.name }, 'ExifIFD', t.value, nv, t.vo, ascii(nv)); }
       const gu = gpsUtc(T);
       if (gu != null && dU !== 0) {
         const ds = tag('GPS', 0x1D), ts = tag('GPS', 7), nu = gu + dU, p = parts(nu);
-        const nd = `${pad(p.Y, 4)}:${pad(p.M)}:${pad(p.D)}`; if (nd !== ds.value) add({ g: 'Дата', t: 'GPSDateStamp' }, 'GPS IFD', ds.value, nd, ds.vo, ascii(nd));
+        const nd = `${pad(p.Y, 4)}:${pad(p.M)}:${pad(p.D)}`; if (nd !== ds.value) add({ g: tr('grpDate'), t: 'GPSDateStamp' }, 'GPS IFD', ds.value, nd, ds.vo, ascii(nd));
         const secs = (nu - Date.UTC(p.Y, p.M - 1, p.D)) / 1000, den = ts.value.map(r => r[1] || 1);
         const h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60), s = secs - h * 3600 - m * 60;
         const nr = [[h * den[0], den[0]], [m * den[1], den[1]], [Math.round(s * den[2]), den[2]]];
-        add({ g: 'Дата', t: 'GPSTimeStamp' }, 'GPS IFD', prettyTag(ts), prettyTag({ ...ts, value: nr }), ts.vo, ratBytes(nr, T.le));
+        add({ g: tr('grpDate'), t: 'GPSTimeStamp' }, 'GPS IFD', prettyTag(ts), prettyTag({ ...ts, value: nr }), ts.vo, ratBytes(nr, T.le));
       }
     }
     if (E.loc && P.loc && isFinite(E.loc.lat) && isFinite(E.loc.lon)) {
@@ -892,15 +1114,15 @@ function planPhoto(P, E) {
       if (Math.abs(O.lat - L.lat) > 5e-7 || Math.abs(O.lon - L.lon) > 5e-7) {
         for (const [refTag, valTag, v, pos, neg] of [[1, 2, L.lat, 'N', 'S'], [3, 4, L.lon, 'E', 'W']]) {
           const rt = tag('GPS', refTag), vt = tag('GPS', valTag); if (!vt || vt.count !== 3) continue;
-          const nr = encodeDMS(v, vt.value); add({ g: 'Место', t: vt.name }, 'GPS IFD', prettyTag(vt), prettyTag({ ...vt, value: nr }), vt.vo, ratBytes(nr, T.le));
-          const nref = v < 0 ? neg : pos; if (rt && rt.value !== nref) add({ g: 'Место', t: rt.name }, 'GPS IFD', rt.value, nref, rt.vo, ascii(nref));
+          const nr = encodeDMS(v, vt.value); add({ g: tr('grpPlace'), t: vt.name }, 'GPS IFD', prettyTag(vt), prettyTag({ ...vt, value: nr }), vt.vo, ratBytes(nr, T.le));
+          const nref = v < 0 ? neg : pos; if (rt && rt.value !== nref) add({ g: tr('grpPlace'), t: rt.name }, 'GPS IFD', rt.value, nref, rt.vo, ascii(nref));
         }
       }
       const at = tag('GPS', 6), ar = tag('GPS', 5);
       if (at && L.alt != null && isFinite(L.alt) && (O.alt == null || Math.abs(O.alt - L.alt) > 5e-3)) {
         const den = at.value[0][1] || 1, nr = [[Math.round(Math.abs(L.alt) * den), den]];
-        add({ g: 'Место', t: 'GPSAltitude' }, 'GPS IFD', prettyTag(at), prettyTag({ ...at, value: nr }), at.vo, ratBytes(nr, T.le));
-        const nref = L.alt < 0 ? 1 : 0; if (ar && ar.value[0] !== nref) add({ g: 'Место', t: 'GPSAltitudeRef' }, 'GPS IFD', String(ar.value[0]), String(nref), ar.vo, new Uint8Array([nref]));
+        add({ g: tr('grpPlace'), t: 'GPSAltitude' }, 'GPS IFD', prettyTag(at), prettyTag({ ...at, value: nr }), at.vo, ratBytes(nr, T.le));
+        const nref = L.alt < 0 ? 1 : 0; if (ar && ar.value[0] !== nref) add({ g: tr('grpPlace'), t: 'GPSAltitudeRef' }, 'GPS IFD', String(ar.value[0]), String(nref), ar.vo, new Uint8Array([nref]));
       }
     }
   });
@@ -912,7 +1134,7 @@ function planPhoto(P, E) {
       if (nv === val) continue;
       if (nv.length !== val.length) continue;
       const charIdx = m.index + m[1].length + m[2].length, off = te.encode(x.text.slice(0, charIdx)).length;
-      ch.push({ group: 'Дата', label: m[1], where: 'XMP' + (P.xmps.length > 1 ? ' #' + (xi + 1) : ''), from: val, to: nv, patches: [{ R: x.R, off, bytes: ascii(nv) }] });
+      ch.push({ group: tr('grpDate'), label: m[1], where: 'XMP' + (P.xmps.length > 1 ? ' #' + (xi + 1) : ''), from: val, to: nv, patches: [{ R: x.R, off, bytes: ascii(nv) }] });
     }
   });
   return ch;
@@ -933,12 +1155,12 @@ async function open(file) {
     return parseVideo(file);
   }
   if (h.length >= 8 && ['moov', 'wide', 'mdat', 'free', 'skip'].includes(str4(h, 4))) return parseVideo(file);
-  throw new Error('Неизвестный формат. Поддерживаются MOV/MP4, HEIC и JPEG.');
+  throw new Error(tr('errFormat'));
 }
 const plan = (M, E) => M.kind === 'video' ? planVideo(M, E) : planPhoto(M, E);
 const build = (M, ch) => M.kind === 'video' ? buildVideo(M, ch) : buildPhoto(M, ch);
 
-return { open, plan, build, parseIso, offStr, parseOff, fmtUtc, qtToMs, KEY_RU, CODEC, HANDLER, TAG_RU, prettyTag, hex, parts, pad };
+return { open, plan, build, parseIso, offStr, parseOff, fmtUtc, qtToMs, KEY_LABEL, CODEC, HANDLER, TAG_LABEL, prettyTag, hex, parts, pad };
 })();
 </script>
 
@@ -952,24 +1174,47 @@ const { pad } = Core;
 const S = { M: null, file: null, url: null, E: null, changes: [], tab: null, q: '' };
 
 /* ---------- formatting ---------- */
-const dFmt = new Intl.DateTimeFormat('ru-RU', { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' });
-const wdFmt = new Intl.DateTimeFormat('ru-RU', { timeZone: 'UTC', weekday: 'long' });
+const loc = () => I18N.locale();
+const dFmt = ms => new Intl.DateTimeFormat(loc(), { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' }).format(ms);
+const wdFmt = ms => new Intl.DateTimeFormat(loc(), { timeZone: 'UTC', weekday: 'long' }).format(ms);
 const tzLabel = m => 'UTC' + Core.offStr(m);
 const hms = ms => { const p = Core.parts(ms); return `${pad(p.h)}:${pad(p.m)}:${pad(p.s)}`; };
-const bytes = n => n < 1024 ? n + ' Б' : n < 1048576 ? (n / 1024).toFixed(1) + ' КБ' : n < 1073741824 ? (n / 1048576).toFixed(1) + ' МБ' : (n / 1073741824).toFixed(2) + ' ГБ';
-const dur = s => { if (!isFinite(s)) return '—'; const m = Math.floor(s / 60), r = s - m * 60; return m ? `${m}:${r.toFixed(0).padStart(2, '0')} мин` : `${r.toFixed(2)} с`; };
-const mbit = b => b >= 1e6 ? (b / 1e6).toFixed(1) + ' Мбит/с' : b >= 1e3 ? (b / 1e3).toFixed(0) + ' кбит/с' : '< 1 кбит/с';
+const bytes = n => n < 1024 ? n + ' ' + tr('uB') : n < 1048576 ? (n / 1024).toFixed(1) + ' ' + tr('uKB') : n < 1073741824 ? (n / 1048576).toFixed(1) + ' ' + tr('uMB') : (n / 1073741824).toFixed(2) + ' ' + tr('uGB');
+const dur = s => { if (!isFinite(s)) return '—'; const m = Math.floor(s / 60), r = s - m * 60; return m ? tr('durMin', m, r.toFixed(0).padStart(2, '0')) : tr('durSec', r.toFixed(2)); };
+const mbit = b => b >= 1e6 ? (b / 1e6).toFixed(1) + ' ' + tr('uMbps') : b >= 1e3 ? (b / 1e3).toFixed(0) + ' ' + tr('uKbps') : '< 1 ' + tr('uKbps');
 function humanDelta(ms) {
   if (!ms) return '';
   const s = Math.abs(Math.round(ms / 1000)); const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
-  const out = []; if (d) out.push(d + ' дн'); if (h) out.push(h + ' ч'); if (m) out.push(m + ' мин'); if (sec) out.push(sec + ' с');
-  return (ms > 0 ? 'позже на ' : 'раньше на ') + out.join(' ');
+  const out = []; if (d) out.push(d + ' ' + tr('uDay')); if (h) out.push(h + ' ' + tr('uHour')); if (m) out.push(m + ' ' + tr('uMin')); if (sec) out.push(sec + ' ' + tr('uSec'));
+  return tr(ms > 0 ? 'later' : 'earlier', out.join(' '));
 }
-function whenHTML(label, local, off, cls) {
+function whenHTML(label, local, off) {
   const utc = local - off * 60000;
-  return `<div class="lbl">${label}</div><div class="d">${esc(dFmt.format(local))}</div>
+  return `<div class="lbl">${label}</div><div class="d">${esc(dFmt(local))}</div>
     <div class="t"><b>${hms(local).slice(0, 5)}</b>${hms(local).slice(5)}<span class="tz">${tzLabel(off)}</span></div>
-    <div class="sub">${esc(wdFmt.format(local))} · ${hms(utc)} UTC</div>`;
+    <div class="sub">${esc(wdFmt(local))} · ${hms(utc)} UTC</div>`;
+}
+
+/* ---------- language ---------- */
+function applyStatic() {
+  document.documentElement.lang = I18N.lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = tr(el.dataset.i18n); });
+  document.querySelectorAll('#lang button').forEach(b => { const on = b.dataset.lang === I18N.lang; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+}
+async function setLang(l) {
+  if (l === I18N.lang) return;
+  I18N.set(l); applyStatic();
+  if (!S.file) return;
+  // labels produced while parsing are localized, so re-read the file and keep the user's edits
+  const E = S.E, locOn = $('locSwitch').checked, vals = ['inLat', 'inLon', 'inAlt'].map(id => $(id).value);
+  let M; try { M = await Core.open(S.file); } catch { return; }
+  S.M = M;
+  if ($('preview').querySelector('.ph')) renderPreview();
+  renderStatic();
+  $('locSwitch').checked = locOn; $('locFields').hidden = !locOn;
+  ['inLat', 'inLon', 'inAlt'].forEach((id, i) => { $(id).value = vals[i]; });
+  if (E) { S.E = E; fillInputs(); readInputs(); }
+  recompute();
 }
 
 /* ---------- file loading ---------- */
@@ -982,71 +1227,71 @@ async function load(file) {
     S.E = M.date ? { local: M.date.local, off: M.date.off, loc: null } : null;
     S.tab = null; S.q = '';
     $('empty').hidden = true; $('ws').hidden = false; $('openBtn2').hidden = false; $('savebar').hidden = false;
-    renderStatic(); fillInputs(); recompute();
+    renderPreview(); renderStatic(); fillInputs(); recompute();
     window.scrollTo({ top: 0 });
   } catch (e) {
     console.error(e);
-    $('err').textContent = 'Не удалось прочитать файл: ' + (e.message || e); $('err').hidden = false;
+    $('err').textContent = tr('errRead') + (e.message || e); $('err').hidden = false;
   }
 }
 
 /* ---------- static parts ---------- */
+function renderPreview() {
+  const pv = $('preview');
+  if (S.M.kind === 'video') pv.innerHTML = `<video controls playsinline preload="metadata" src="${S.url}"></video>`;
+  else { pv.innerHTML = `<img alt="">`; const img = pv.querySelector('img'); img.onerror = () => { pv.innerHTML = `<div class="ph"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg><br>${tr('heicNoPreview')}</div>`; }; img.src = S.url; }
+}
 function renderStatic() {
   const M = S.M, f = S.file;
   $('fname').textContent = f.name;
-  const kindTxt = M.kind === 'video' ? 'Видео' : 'Фото';
+  const kindTxt = M.kind === 'video' ? tr('kindVideo') : tr('kindPhoto');
   const fmt = M.kind === 'video' ? (M.tops.find(t => t.type === 'ftyp')?.major?.trim() === 'qt' ? 'QuickTime MOV' : 'MP4') : (M.fmt === 'jpeg' ? 'JPEG' : 'HEIC');
   $('badges').innerHTML = `<span class="badge">${kindTxt}</span><span class="badge gray">${fmt}</span><span class="badge gray">${bytes(f.size)}</span>`;
-
-  // preview
-  const pv = $('preview');
-  if (M.kind === 'video') pv.innerHTML = `<video controls playsinline preload="metadata" src="${S.url}"></video>`;
-  else { pv.innerHTML = `<img alt="">`; const img = pv.querySelector('img'); img.onerror = () => { pv.innerHTML = `<div class="ph"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg><br>Превью HEIC этот браузер не показывает<br>(откройте страницу в Safari)</div>`; }; img.src = S.url; }
 
   // facts
   const D = M.device || {}; const li = [];
   const add = (k, v) => { if (v != null && v !== '') li.push(`<li><span>${esc(k)}</span><span>${esc(v)}</span></li>`); };
-  add('Устройство', [D.make, D.model].filter(Boolean).join(' '));
-  add('iOS', D.software);
-  if (D.lens) add('Объектив', D.lens);
+  add(tr('fDevice'), [D.make, D.model].filter(Boolean).join(' '));
+  add(tr('fIos'), D.software);
+  if (D.lens) add(tr('fLens'), D.lens);
   if (M.kind === 'video') {
     const v = M.tracks.find(t => t.handler === 'vide'), a = M.tracks.find(t => t.handler === 'soun');
-    if (v) { add('Видео', `${Core.CODEC[v.format] || v.format} · ${v.cw || v.w}×${v.ch || v.h}`); if (v.fps) add('Частота кадров', `${+v.fps.toFixed(2)} к/с`); if (v.rotation) add('Поворот', `${Math.abs(v.rotation)}° (${Math.abs(v.rotation) === 90 ? 'вертикальное' : 'повёрнутое'})`); }
-    if (a) add('Звук', `${Core.CODEC[a.format] || a.format} · ${a.timescale / 1000} кГц${a.channels ? ' · ' + (a.channels === 2 ? 'стерео' : a.channels + ' кан.') : ''}`);
-    add('Длительность', dur(M.durationSec));
-    add('Дорожек', M.tracks.length);
+    if (v) { add(tr('fVideo'), `${Core.CODEC[v.format] || v.format} · ${v.cw || v.w}×${v.ch || v.h}`); if (v.fps) add(tr('fFps'), `${+v.fps.toFixed(2)} ${tr('uFps')}`); if (v.rotation) add(tr('fRot'), `${Math.abs(v.rotation)}° (${Math.abs(v.rotation) === 90 ? tr('rotPortrait') : tr('rotRotated')})`); }
+    if (a) add(tr('fAudio'), `${Core.CODEC[a.format] || a.format} · ${a.timescale / 1000} ${tr('uKHz')}${a.channels ? ' · ' + (a.channels === 2 ? tr('stereo') : tr('nCh', a.channels)) : ''}`);
+    add(tr('fDuration'), dur(M.durationSec));
+    add(tr('fTracks'), M.tracks.length);
   } else {
-    const s = M.shot; if (s.w) add('Размер', `${s.w}×${s.h}`);
-    if (s.f35) add('Фокусное (35 мм)', s.f35 + ' мм');
-    const ex = [s.exp && Core.prettyTag(s.exp), s.fn && Core.prettyTag(s.fn), s.iso && 'ISO ' + s.iso].filter(Boolean).join(' · '); add('Экспозиция', ex);
+    const s = M.shot; if (s.w) add(tr('fSize'), `${s.w}×${s.h}`);
+    if (s.f35) add(tr('fFocal35'), s.f35 + ' ' + tr('uMm'));
+    const ex = [s.exp && Core.prettyTag(s.exp), s.fn && Core.prettyTag(s.fn), s.iso && 'ISO ' + s.iso].filter(Boolean).join(' · '); add(tr('fExposure'), ex);
   }
-  add('Файл изменён (ФС)', new Date(f.lastModified).toLocaleString('ru-RU'));
+  add(tr('fFsModified'), new Date(f.lastModified).toLocaleString(loc()));
   $('facts').innerHTML = li.join('');
 
   // date source
   const dc = $('dateCard');
-  if (!M.date) { dc.querySelector('.cmp').hidden = true; dc.querySelector('.fields').hidden = true; $('chips').hidden = true; $('delta').hidden = true; $('dateSrc').textContent = 'Дата в файле не найдена'; $('dateNote').hidden = false; $('dateNote').textContent = 'В этом файле нет поля с датой съёмки, которое можно безопасно исправить.'; }
+  if (!M.date) { dc.querySelector('.cmp').hidden = true; dc.querySelector('.fields').hidden = true; $('chips').hidden = true; $('delta').hidden = true; $('dateSrc').textContent = tr('noDateSrc'); $('dateNote').hidden = false; $('dateNote').textContent = tr('noDateNote'); }
   else {
     dc.querySelector('.cmp').hidden = false; dc.querySelector('.fields').hidden = false; $('chips').hidden = false; $('delta').hidden = false;
-    $('dateSrc').innerHTML = 'Источник: <span class="mono">' + esc(M.date.source) + '</span>' + (M.date.offFrom && M.date.offKnown && M.date.offFrom !== 'EXIF OffsetTime' ? ` · пояс ${esc(M.date.offFrom)}` : '');
-    $('whenOld').innerHTML = whenHTML('Сейчас в файле', M.date.local, M.date.off);
+    $('dateSrc').innerHTML = esc(tr('source')) + '<span class="mono">' + esc(M.date.source) + '</span>' + (M.date.offFrom && M.date.offKnown && M.date.offFrom !== 'EXIF OffsetTime' ? esc(tr('tzFrom', M.date.offFrom)) : '');
+    $('whenOld').innerHTML = whenHTML(esc(tr('nowInFile')), M.date.local, M.date.off);
     const notes = [];
-    if (!M.date.offKnown) notes.push(M.kind === 'video' ? 'В файле не записан часовой пояс — показано время в поясе этого компьютера. Выберите пояс места съёмки: при сохранении будет добавлено поле com.apple.quicktime.creationdate.' : 'В файле не записан часовой пояс (нет OffsetTime) — показано время в поясе этого компьютера. iPhone будет показывать время «как есть».');
+    if (!M.date.offKnown) notes.push(M.kind === 'video' ? tr('noTzVideo') : tr('noTzPhoto'));
     $('dateNote').hidden = !notes.length; $('dateNote').textContent = notes.join(' ');
   }
 
   // tz select
   const offs = new Set([-720, -660, -600, -570, -540, -480, -420, -360, -300, -240, -210, -180, -120, -60, 0, 60, 120, 180, 210, 240, 270, 300, 330, 345, 360, 390, 420, 480, 525, 540, 570, 600, 630, 660, 720, 765, 780, 840]);
   if (M.date) offs.add(M.date.off);
-  const names = { 0: 'Лондон, Лиссабон', 60: 'Берлин, Париж, Рим', 120: 'Калининград, Киев, Афины', 180: 'Москва, Стамбул, Минск', 240: 'Дубай, Самара, Тбилиси', 300: 'Екатеринбург, Ташкент', 330: 'Индия', 360: 'Омск, Алматы', 420: 'Новосибирск, Бангкок', 480: 'Иркутск, Пекин, Сингапур', 540: 'Якутск, Токио, Сеул', 600: 'Владивосток, Сидней', 660: 'Магадан', 720: 'Камчатка, Окленд', '-300': 'Нью-Йорк (зима)', '-240': 'Нью-Йорк (лето)', '-480': 'Лос-Анджелес (зима)', '-420': 'Лос-Анджелес (лето)', '-180': 'Сан-Паулу, Буэнос-Айрес', 210: 'Тегеран', 270: 'Кабул', 345: 'Непал' };
-  $('inTz').innerHTML = [...offs].sort((a, b) => a - b).map(o => `<option value="${o}">${tzLabel(o)}${names[o] ? ' — ' + names[o] : ''}</option>`).join('');
+  const names = tr('tzNames');
+  $('inTz').innerHTML = [...offs].sort((a, b) => a - b).map(o => `<option value="${o}">${tzLabel(o)}${names[o] ? ' — ' + esc(names[o]) : ''}</option>`).join('');
 
   // location
   const L = M.loc;
-  $('locSrc').innerHTML = L ? 'Источник: <span class="mono">' + esc(L.source) + '</span>' : 'Координаты в файле не записаны';
-  $('locView').innerHTML = L ? `<div><div class="coords">${Math.abs(L.lat).toFixed(5)}° ${L.lat >= 0 ? 'с. ш.' : 'ю. ш.'}, ${Math.abs(L.lon).toFixed(5)}° ${L.lon >= 0 ? 'в. д.' : 'з. д.'}</div>
-    <div class="sub">${L.alt != null ? 'Высота ' + (+L.alt.toFixed(1)) + ' м' : ''}${L.acc != null ? (L.alt != null ? ' · ' : '') + 'точность ±' + (+(+L.acc).toFixed(1)) + ' м' : ''}</div></div>
-    <a href="https://www.openstreetmap.org/?mlat=${L.lat}&mlon=${L.lon}#map=16/${L.lat}/${L.lon}" target="_blank" rel="noopener noreferrer">Открыть на карте ↗</a>` : '<div class="muted">—</div>';
+  $('locSrc').innerHTML = L ? esc(tr('source')) + '<span class="mono">' + esc(L.source) + '</span>' : esc(tr('noCoords'));
+  $('locView').innerHTML = L ? `<div><div class="coords">${Math.abs(L.lat).toFixed(5)}° ${tr(L.lat >= 0 ? 'latN' : 'latS')}, ${Math.abs(L.lon).toFixed(5)}° ${tr(L.lon >= 0 ? 'lonE' : 'lonW')}</div>
+    <div class="sub">${L.alt != null ? esc(tr('alt', +L.alt.toFixed(1))) : ''}${L.acc != null ? (L.alt != null ? ' · ' : '') + esc(tr('acc', +(+L.acc).toFixed(1))) : ''}</div></div>
+    <a href="https://www.openstreetmap.org/?mlat=${L.lat}&mlon=${L.lon}#map=16/${L.lat}/${L.lon}" target="_blank" rel="noopener noreferrer">${esc(tr('openMap'))}</a>` : '<div class="muted">—</div>';
   $('locSwitch').checked = false; $('locFields').hidden = true;
   $('locSwitchWrap').hidden = !M.locEditable;
   $('locNote').hidden = !M.locReason; $('locNote').textContent = M.locReason || '';
@@ -1063,6 +1308,7 @@ function fillInputs() {
   $('inTz').value = String(S.E.off);
 }
 function readInputs() {
+  if (!S.E) return;
   const d = /^(\d{4})-(\d\d)-(\d\d)$/.exec($('inDate').value), t = /^(\d\d):(\d\d)(?::(\d\d))?/.exec($('inTime').value);
   if (d && t) S.E.local = Date.UTC(+d[1], d[2] - 1, +d[3], +t[1], +t[2], +(t[3] || 0));
   S.E.off = +$('inTz').value;
@@ -1084,26 +1330,26 @@ function recompute() {
     try { S.changes = Core.plan(M, S.E); S.planErr = null; } catch (e) { S.changes = []; S.planErr = e.message; }
     const changed = S.E.local !== M.date.local || S.E.off !== M.date.off;
     const wn = $('whenNew'); wn.className = 'when new' + (changed ? '' : ' same');
-    wn.innerHTML = whenHTML(changed ? 'Станет' : 'Без изменений', S.E.local, S.E.off);
+    wn.innerHTML = whenHTML(esc(tr(changed ? 'willBe' : 'noChange')), S.E.local, S.E.off);
     const dU = (S.E.local - S.E.off * 60000) - (M.date.local - M.date.off * 60000);
     const dl = $('delta'); dl.className = 'delta' + (changed ? ' on' : '');
-    dl.textContent = !changed ? 'Измените дату, время или часовой пояс — или используйте быстрые кнопки.' : (dU ? 'Момент съёмки сдвинется ' + humanDelta(dU) : 'Момент съёмки тот же, меняется только часовой пояс') + (S.E.off !== M.date.off ? ` · пояс ${tzLabel(M.date.off)} → ${tzLabel(S.E.off)}` : '');
+    dl.textContent = !changed ? tr('deltaHint') : (dU ? tr('shiftBy', humanDelta(dU)) : tr('sameMoment')) + (S.E.off !== M.date.off ? tr('tzChange', tzLabel(M.date.off), tzLabel(S.E.off)) : '');
   } else S.changes = [];
   renderChanges();
 }
 function renderChanges() {
   const C = S.changes, box = $('changes');
   if (S.planErr) box.innerHTML = `<div class="err" style="margin:0">${esc(S.planErr)}</div>`;
-  else if (!C.length) box.innerHTML = `<div class="emptych">Пока ничего не меняется. Измените дату или место — здесь появится список всех полей, которые будут переписаны.</div>`;
+  else if (!C.length) box.innerHTML = `<div class="emptych">${esc(tr('emptyChanges'))}</div>`;
   else {
-    let html = '<div class="tblwrap"><table class="tbl"><thead><tr><th>Поле</th><th>Было</th><th>Станет</th></tr></thead><tbody>', g = null;
+    let html = `<div class="tblwrap"><table class="tbl"><thead><tr><th>${tr('thField')}</th><th>${tr('thFrom')}</th><th>${tr('thTo')}</th></tr></thead><tbody>`, g = null;
     const rows = [];
     for (const c of C) {
       const hdr = /\/(mvhd|tkhd|mdhd)$/.test(c.where), last = rows[rows.length - 1];
       if (hdr && last && last.hdr && last.from === c.from && last.to === c.to) { last.n++; last.parts.add(c.where.split('/').pop()); continue; }
       rows.push({ ...c, hdr, n: 1, parts: new Set([c.where.split('/').pop()]) });
     }
-    for (const r of rows) if (r.hdr && r.n > 1) { r.label = `Метки времени в заголовках · ${r.n} ${plural(r.n, 'место', 'места', 'мест')}`; r.where = [...r.parts].join(', ') + ' — фильм и все дорожки (UTC)'; }
+    for (const r of rows) if (r.hdr && r.n > 1) { r.label = tr('hdrStamps', r.n); r.where = tr('hdrWhere', [...r.parts].join(', ')); }
     for (const c of rows) {
       if (c.group !== g) { g = c.group; html += `<tr class="grp"><td colspan="3">${esc(g)}</td></tr>`; }
       html += `<tr><td><div>${esc(c.label)}</div><div class="where">${esc(c.where)}</div></td><td class="from">${esc(c.from)}</td><td class="to">${esc(c.to)}</td></tr>`;
@@ -1112,30 +1358,29 @@ function renderChanges() {
   }
   const n = C.length;
   $('saveBtn').disabled = !n;
-  $('saveTxt').innerHTML = n ? `<b>${n}</b> ${plural(n, 'поле', 'поля', 'полей')} будет переписано<span class="muted">${S.M.kind === 'video' ? 'Видео и звук не перекодируются' : 'Изображение не пересжимается'}</span>` : `Изменений нет<span class="muted">Выберите новую дату или место</span>`;
+  $('saveTxt').innerHTML = n ? `${tr('saveCount', n)}<span class="muted">${esc(tr(S.M.kind === 'video' ? 'noReencodeV' : 'noReencodeP'))}</span>` : `${esc(tr('noChanges'))}<span class="muted">${esc(tr('pickNew'))}</span>`;
 }
-const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? a : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? b : c; };
 
 /* ---------- tabs ---------- */
 function tabList() {
   const M = S.M;
-  if (M.kind === 'video') return [['tracks', `Дорожки · ${M.tracks.length}`], ['meta', 'Все метаданные'], ['tree', 'Структура файла']];
+  if (M.kind === 'video') return [['tracks', tr('tabTracks', M.tracks.length)], ['meta', tr('tabMeta')], ['tree', tr('tabTree')]];
   const t = [['exif', 'EXIF'], ['gps', 'GPS']];
   if (M.makerNote.length) t.push(['apple', 'Apple MakerNote']);
   if (M.xmps.length) t.push(['xmp', 'XMP']);
-  t.push(['tree', 'Структура файла']);
+  t.push(['tree', tr('tabTree')]);
   return t;
 }
 function renderTabs() {
   const tl = tabList(); if (!S.tab || !tl.find(t => t[0] === S.tab)) S.tab = tl[0][0];
   $('tabs').innerHTML = tl.map(([k, l]) => `<button class="tab${k === S.tab ? ' on' : ''}" data-tab="${k}">${esc(l)}</button>`).join('');
   const M = S.M, b = $('tabBody');
-  const search = (ph) => `<input class="inp search" id="q" placeholder="${ph}" value="${esc(S.q)}">`;
+  const search = (ph) => `<input class="inp search" id="q" placeholder="${esc(ph)}" value="${esc(S.q)}">`;
   if (S.tab === 'tracks') b.innerHTML = renderTracks(M);
-  else if (S.tab === 'meta') { b.innerHTML = search('Поиск по ключам и значениям…') + '<div id="tblBody"></div>'; renderMetaTable(); }
-  else if (S.tab === 'exif') { b.innerHTML = search('Поиск по тегам…') + '<div id="tblBody"></div>'; renderExifTable(['IFD0', 'Exif', 'Interop', 'IFD1']); }
+  else if (S.tab === 'meta') { b.innerHTML = search(tr('searchKeys')) + '<div id="tblBody"></div>'; renderMetaTable(); }
+  else if (S.tab === 'exif') { b.innerHTML = search(tr('searchTags')) + '<div id="tblBody"></div>'; renderExifTable(['IFD0', 'Exif', 'Interop', 'IFD1']); }
   else if (S.tab === 'gps') { b.innerHTML = '<div id="tblBody"></div>'; renderExifTable(['GPS']); }
-  else if (S.tab === 'apple') b.innerHTML = '<div class="tblwrap"><table class="tbl"><thead><tr><th>Тег</th><th>Значение</th></tr></thead><tbody>' + M.makerNote.map(m => `<tr><td class="k">${esc(m.name)}</td><td class="val">${esc(m.value)}</td></tr>`).join('') + '</tbody></table></div>';
+  else if (S.tab === 'apple') b.innerHTML = `<div class="tblwrap"><table class="tbl"><thead><tr><th>${tr('thTag')}</th><th>${tr('thValue')}</th></tr></thead><tbody>` + M.makerNote.map(m => `<tr><td class="k">${esc(m.name)}</td><td class="val">${esc(m.value)}</td></tr>`).join('') + '</tbody></table></div>';
   else if (S.tab === 'xmp') b.innerHTML = M.xmps.map(x => `<pre class="xmp">${esc(x.text.replace(/\s+$/, ''))}</pre>`).join('<div style="height:12px"></div>');
   else if (S.tab === 'tree') b.innerHTML = renderTree(M);
   const q = $('q'); if (q) q.oninput = () => { S.q = q.value; S.tab === 'meta' ? renderMetaTable() : renderExifTable(['IFD0', 'Exif', 'Interop', 'IFD1']); };
@@ -1144,53 +1389,53 @@ function renderTracks(M) {
   const icon = h => h === 'vide' ? ['blue', '<path d="M4 6h11a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zM17 10l5-3v10l-5-3"/>'] : h === 'soun' ? ['green', '<path d="M4 10v4M8 6v12M12 9v6M16 4v16M20 10v4"/>'] : ['orange', '<path d="M4 7h16M4 12h16M4 17h10"/>'];
   return '<div class="tracks">' + M.tracks.map(T => {
     const [c, p] = icon(T.handler);
-    const title = T.handler === 'meta' && T.keys?.length ? (Core.KEY_RU[T.keys.find(k => Core.KEY_RU[k])] || T.keys[0]) : (Core.HANDLER[T.handler] || T.handler);
+    const title = T.handler === 'meta' && T.keys?.length ? (Core.KEY_LABEL[T.keys.find(k => Core.KEY_LABEL[k])] || T.keys[0]) : (Core.HANDLER[T.handler] || T.handler);
     const st = [];
-    const s = (l, v) => { if (v != null && v !== '' && v !== 'NaN') st.push(`<div class="stat"><div class="l">${l}</div><div class="v">${esc(v)}</div></div>`); };
-    s('Кодек / формат', `${Core.CODEC[T.format] || ''} ${T.format ? '(' + T.format + ')' : ''}`.trim());
-    if (T.handler === 'vide') { s('Разрешение', `${T.cw}×${T.ch}`); s('Частота кадров', T.fps && (+T.fps.toFixed(3)) + ' к/с'); if (T.rotation) s('Поворот', T.rotation + '°'); }
-    if (T.handler === 'soun') { s('Частота', T.timescale + ' Гц'); s('Каналы', T.channels); }
-    s('Длительность', dur(T.duration)); s('Сэмплов', T.samples?.toLocaleString('ru-RU'));
-    if (T.bitrate) s('Битрейт', mbit(T.bitrate)); if (T.bytes != null) s('Объём', bytes(T.bytes));
-    s('Язык', T.lang); s('Создана', T.created != null ? Core.fmtUtc(Core.qtToMs(T.created)) : null); s('Изменена', T.modified != null ? Core.fmtUtc(Core.qtToMs(T.modified)) : null);
+    const s = (l, v) => { if (v != null && v !== '' && v !== 'NaN') st.push(`<div class="stat"><div class="l">${esc(l)}</div><div class="v">${esc(v)}</div></div>`); };
+    s(tr('sCodec'), `${Core.CODEC[T.format] || ''} ${T.format ? '(' + T.format + ')' : ''}`.trim());
+    if (T.handler === 'vide') { s(tr('sRes'), `${T.cw}×${T.ch}`); s(tr('fFps'), T.fps && (+T.fps.toFixed(3)) + ' ' + tr('uFps')); if (T.rotation) s(tr('fRot'), T.rotation + '°'); }
+    if (T.handler === 'soun') { s(tr('sRate'), T.timescale + ' ' + tr('uHz')); s(tr('sChannels'), T.channels); }
+    s(tr('fDuration'), dur(T.duration)); s(tr('sSamples'), T.samples?.toLocaleString(loc()));
+    if (T.bitrate) s(tr('sBitrate'), mbit(T.bitrate)); if (T.bytes != null) s(tr('sSize'), bytes(T.bytes));
+    s(tr('sLang'), T.lang); s(tr('sCreated'), T.created != null ? Core.fmtUtc(Core.qtToMs(T.created)) : null); s(tr('sModified'), T.modified != null ? Core.fmtUtc(Core.qtToMs(T.modified)) : null);
     let extra = '';
     if (T.keys?.length) extra += '<div class="keys">' + T.keys.map(k => `<span class="key">${esc(k)}</span>`).join('') + '</div>';
-    if (T.meta?.items.length) extra += '<div class="keys">' + T.meta.items.map(i => `<span class="key">${esc((Core.KEY_RU[i.key] || i.key) + ': ' + i.value)}</span>`).join('') + '</div>';
-    return `<div class="trk"><div class="trk-h"><div class="ic ${c}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg></div><div><b>Дорожка ${T.n} · ${esc(title)}</b><div class="muted">ID ${T.id ?? '—'} · обработчик <span class="mono">${esc(T.handler)}</span>${T.handlerName ? ' · ' + esc(T.handlerName) : ''}</div></div></div><div class="stats">${st.join('')}</div>${extra}</div>`;
+    if (T.meta?.items.length) extra += '<div class="keys">' + T.meta.items.map(i => `<span class="key">${esc((Core.KEY_LABEL[i.key] || i.key) + ': ' + i.value)}</span>`).join('') + '</div>';
+    return `<div class="trk"><div class="trk-h"><div class="ic ${c}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg></div><div><b>${esc(tr('trackTitle', T.n, title))}</b><div class="muted">ID ${T.id ?? '—'} · ${tr('handler')} <span class="mono">${esc(T.handler)}</span>${T.handlerName ? ' · ' + esc(T.handlerName) : ''}</div></div></div><div class="stats">${st.join('')}</div>${extra}</div>`;
   }).join('') + '</div>';
 }
 function renderMetaTable() {
   const M = S.M, q = S.q.toLowerCase(), rows = [];
-  const push = (sec, k, ru, v, t) => rows.push({ sec, k, ru, v: String(v), t });
-  for (const g of M.metas) for (const i of g.meta.items) push(`${g.title} · ${g.path}`, i.key, Core.KEY_RU[i.key], i.value, i.type);
-  for (const u of M.udta) push('Пользовательские данные · /moov/udta', u.key, '', u.value, 'udta');
-  for (const h of M.hdr) { push('Заголовки атомов (UTC, секунды с 1904 г.)', h.label + ' · создан', '', `${Core.fmtUtc(Core.qtToMs(h.c))}  (${h.c})`, 'v' + h.v); push('Заголовки атомов (UTC, секунды с 1904 г.)', h.label + ' · изменён', '', `${Core.fmtUtc(Core.qtToMs(h.m))}  (${h.m})`, 'v' + h.v); }
-  const ft = M.tops.find(t => t.type === 'ftyp'); if (ft) push('Тип файла · ftyp', 'major_brand / compatible', '', `${ft.major} / ${ft.compat.join(', ')}`, '');
-  push('Файловая система (не часть файла)', 'lastModified', 'Дата изменения файла', new Date(S.file.lastModified).toLocaleString('ru-RU'), '');
-  const f = rows.filter(r => !q || (r.k + ' ' + (r.ru || '') + ' ' + r.v).toLowerCase().includes(q));
-  let html = '<div class="tblwrap"><table class="tbl"><thead><tr><th>Ключ</th><th>Значение</th><th>Тип</th></tr></thead><tbody>', sec = null;
-  for (const r of f) { if (r.sec !== sec) { sec = r.sec; html += `<tr class="grp"><td colspan="3">${esc(sec)}</td></tr>`; } html += `<tr><td><div class="k">${esc(r.k)}</div>${r.ru ? `<div class="muted" style="font-size:12px">${esc(r.ru)}</div>` : ''}</td><td class="val">${esc(r.v)}</td><td class="muted" style="font-size:12px">${esc(r.t)}</td></tr>`; }
-  $('tblBody').innerHTML = f.length ? html + '</tbody></table></div>' : '<div class="emptych">Ничего не найдено</div>';
+  const push = (sec, k, lbl, v, t) => rows.push({ sec, k, lbl, v: String(v), t });
+  for (const g of M.metas) for (const i of g.meta.items) push(`${g.title} · ${g.path}`, i.key, Core.KEY_LABEL[i.key], i.value, i.type);
+  for (const u of M.udta) push(tr('secUdta'), u.key, '', u.value, 'udta');
+  for (const h of M.hdr) { push(tr('secHdr'), h.label + tr('created'), '', `${Core.fmtUtc(Core.qtToMs(h.c))}  (${h.c})`, 'v' + h.v); push(tr('secHdr'), h.label + tr('modified'), '', `${Core.fmtUtc(Core.qtToMs(h.m))}  (${h.m})`, 'v' + h.v); }
+  const ft = M.tops.find(t => t.type === 'ftyp'); if (ft) push(tr('secFtyp'), 'major_brand / compatible', '', `${ft.major} / ${ft.compat.join(', ')}`, '');
+  push(tr('secFs'), 'lastModified', tr('fsModified'), new Date(S.file.lastModified).toLocaleString(loc()), '');
+  const f = rows.filter(r => !q || (r.k + ' ' + (r.lbl || '') + ' ' + r.v).toLowerCase().includes(q));
+  let html = `<div class="tblwrap"><table class="tbl"><thead><tr><th>${tr('thKey')}</th><th>${tr('thValue')}</th><th>${tr('thType')}</th></tr></thead><tbody>`, sec = null;
+  for (const r of f) { if (r.sec !== sec) { sec = r.sec; html += `<tr class="grp"><td colspan="3">${esc(sec)}</td></tr>`; } html += `<tr><td><div class="k">${esc(r.k)}</div>${r.lbl ? `<div class="muted" style="font-size:12px">${esc(r.lbl)}</div>` : ''}</td><td class="val">${esc(r.v)}</td><td class="muted" style="font-size:12px">${esc(r.t)}</td></tr>`; }
+  $('tblBody').innerHTML = f.length ? html + '</tbody></table></div>' : `<div class="emptych">${esc(tr('nothingFound'))}</div>`;
 }
 function renderExifTable(ifds) {
   const M = S.M, q = (S.tab === 'gps' ? '' : S.q).toLowerCase();
-  const IFDN = { IFD0: 'IFD0 · основные', Exif: 'ExifIFD · съёмка', GPS: 'GPS IFD', Interop: 'Interop IFD', IFD1: 'IFD1 · миниатюра' };
-  let html = '<div class="tblwrap"><table class="tbl"><thead><tr><th>Тег</th><th>Значение</th><th>Тип</th></tr></thead><tbody>', any = false;
+  const IFDN = { IFD0: tr('ifd0'), Exif: tr('ifdExif'), GPS: 'GPS IFD', Interop: 'Interop IFD', IFD1: tr('ifd1') };
+  let html = `<div class="tblwrap"><table class="tbl"><thead><tr><th>${tr('thTag')}</th><th>${tr('thValue')}</th><th>${tr('thType')}</th></tr></thead><tbody>`, any = false;
   M.exifs.forEach((T, ei) => {
     for (const ifd of ifds) {
-      const tags = T.tags.filter(t => t.ifd === ifd).filter(t => { const v = Core.prettyTag(t); return !q || (t.name + ' ' + (Core.TAG_RU[t.name] || '') + ' ' + v).toLowerCase().includes(q); });
+      const tags = T.tags.filter(t => t.ifd === ifd).filter(t => { const v = Core.prettyTag(t); return !q || (t.name + ' ' + (Core.TAG_LABEL[t.name] || '') + ' ' + v).toLowerCase().includes(q); });
       if (!tags.length) continue; any = true;
-      html += `<tr class="grp"><td colspan="3">${M.exifs.length > 1 ? (ei ? `Встроенное изображение ${ei} · ` : 'Основное изображение · ') : ''}${IFDN[ifd]}</td></tr>`;
-      for (const t of tags) html += `<tr><td><div class="k">${esc(t.name)}</div>${Core.TAG_RU[t.name] ? `<div class="muted" style="font-size:12px">${esc(Core.TAG_RU[t.name])}</div>` : ''}</td><td class="val">${esc(Core.prettyTag(t))}</td><td class="muted" style="font-size:12px">0x${t.tag.toString(16).padStart(4, '0')}</td></tr>`;
+      html += `<tr class="grp"><td colspan="3">${M.exifs.length > 1 ? esc(ei ? tr('embImg', ei) : tr('mainImg')) : ''}${esc(IFDN[ifd])}</td></tr>`;
+      for (const t of tags) html += `<tr><td><div class="k">${esc(t.name)}</div>${Core.TAG_LABEL[t.name] ? `<div class="muted" style="font-size:12px">${esc(Core.TAG_LABEL[t.name])}</div>` : ''}</td><td class="val">${esc(Core.prettyTag(t))}</td><td class="muted" style="font-size:12px">0x${t.tag.toString(16).padStart(4, '0')}</td></tr>`;
     }
   });
-  $('tblBody').innerHTML = any ? html + '</tbody></table></div>' : `<div class="emptych">${ifds[0] === 'GPS' ? 'GPS-данных нет' : 'Ничего не найдено'}</div>`;
+  $('tblBody').innerHTML = any ? html + '</tbody></table></div>' : `<div class="emptych">${esc(tr(ifds[0] === 'GPS' ? 'noGps' : 'nothingFound'))}</div>`;
 }
 function nodeInfo(n) {
   if (!n.data) return '';
   const d = n.data;
   try {
-    if (n.type === 'mvhd' || n.type === 'tkhd' || n.type === 'mdhd') { const x = new DataView(d.buffer, d.byteOffset, d.byteLength); const c = d[0] === 1 ? x.getUint32(4) * 4294967296 + x.getUint32(8) : x.getUint32(4); return 'создан ' + Core.fmtUtc(Core.qtToMs(c)); }
+    if (n.type === 'mvhd' || n.type === 'tkhd' || n.type === 'mdhd') { const x = new DataView(d.buffer, d.byteOffset, d.byteLength); const c = d[0] === 1 ? x.getUint32(4) * 4294967296 + x.getUint32(8) : x.getUint32(4); return tr('createdAt') + Core.fmtUtc(Core.qtToMs(c)); }
     if (n.type === 'hdlr') return String.fromCharCode(d[8], d[9], d[10], d[11]);
     if (n.type === 'stsd' && d.length >= 16) return String.fromCharCode(d[12], d[13], d[14], d[15]);
     if (n.type === 'data') { const t = new DataView(d.buffer, d.byteOffset).getUint32(0) & 0xffffff; return t === 1 ? new TextDecoder().decode(d.subarray(8, 80)) : ''; }
@@ -1208,17 +1453,18 @@ function renderTree(M) {
     return `<div class="leaf">${head}</div>`;
   };
   if (M.kind === 'video') {
-    return '<div class="tree">' + M.tops.map(t => t.type === 'moov' ? rec(M.moov, 0) : `<div class="leaf" style="margin-left:0;border:0;padding-left:20px"><span class="ty">${esc(t.type)}</span><span class="sz">${bytes(t.size)}</span><span class="info">${t.type === 'ftyp' ? esc(t.major + ' · ' + t.compat.join(', ')) : t.type === 'mdat' ? 'сжатые видео и звук' : ''}</span></div>`).join('') + '</div>';
+    return '<div class="tree">' + M.tops.map(t => t.type === 'moov' ? rec(M.moov, 0) : `<div class="leaf" style="margin-left:0;border:0;padding-left:20px"><span class="ty">${esc(t.type)}</span><span class="sz">${bytes(t.size)}</span><span class="info">${t.type === 'ftyp' ? esc(t.major + ' · ' + t.compat.join(', ')) : t.type === 'mdat' ? esc(tr('mdatInfo')) : ''}</span></div>`).join('') + '</div>';
   }
   if (M.fmt === 'jpeg') return '<div class="tree">' + M.structure.map(s => `<div class="leaf" style="margin-left:0;border:0"><span class="ty">${esc(s.type)}</span><span class="sz">${bytes(s.size)}</span><span class="info">${esc(s.info)}</span></div>`).join('') + '</div>';
   const counts = {}; M.items.forEach(i => counts[i.type] = (counts[i.type] || 0) + 1);
-  const itemsHtml = `<div style="margin:0 0 14px" class="keys">${Object.entries(counts).map(([k, v]) => `<span class="key">${esc(k)} × ${v}</span>`).join('')}${M.primary != null ? `<span class="key">основное изображение: item ${M.primary}</span>` : ''}</div>`;
+  const itemsHtml = `<div style="margin:0 0 14px" class="keys">${Object.entries(counts).map(([k, v]) => `<span class="key">${esc(k)} × ${v}</span>`).join('')}${M.primary != null ? `<span class="key">${esc(tr('primaryItem', M.primary))}</span>` : ''}</div>`;
   return itemsHtml + '<div class="tree">' + M.tree.map(n => rec(n, 0)).join('') + '</div>';
 }
 
 /* ---------- save ---------- */
 async function save() {
-  const M = S.M; const btn = $('saveBtn'); btn.disabled = true; const old = btn.textContent; btn.textContent = 'Сохраняю…';
+  const M = S.M; const btn = $('saveBtn'); btn.disabled = true; btn.textContent = tr('saving');
+  const done = () => { btn.textContent = tr('saveBtn'); btn.disabled = !S.changes.length; };
   try {
     const blob = await Core.build(M, S.changes);
     const name = S.file.name;
@@ -1226,16 +1472,16 @@ async function save() {
     if (window.showSaveFilePicker) {
       try {
         const ext = (name.match(/\.[^.]+$/) || ['.mov'])[0];
-        const h = await window.showSaveFilePicker({ suggestedName: name, types: [{ description: M.kind === 'video' ? 'Видео' : 'Фото', accept: { [blob.type || 'application/octet-stream']: [ext] } }] });
+        const h = await window.showSaveFilePicker({ suggestedName: name, types: [{ description: tr(M.kind === 'video' ? 'kindVideo' : 'kindPhoto'), accept: { [blob.type || 'application/octet-stream']: [ext] } }] });
         const w = await h.createWritable(); await w.write(blob); await w.close(); saved = true;
-      } catch (e) { if (e.name === 'AbortError') { btn.textContent = old; btn.disabled = false; return; } }
+      } catch (e) { if (e.name === 'AbortError') { done(); return; } }
     }
     if (!saved) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); }
     $('doneName').textContent = `${name} · ${bytes(blob.size)}`;
-    $('doneDate').textContent = S.E ? `${dFmt.format(S.E.local)}, ${hms(S.E.local)}` : '';
+    $('doneDate').textContent = S.E ? `${dFmt(S.E.local)}, ${hms(S.E.local)}` : '';
     $('doneDlg').showModal();
-  } catch (e) { console.error(e); alert('Не удалось сохранить: ' + (e.message || e)); }
-  btn.textContent = old; btn.disabled = !S.changes.length;
+  } catch (e) { console.error(e); alert(tr('errSave') + (e.message || e)); }
+  done();
 }
 
 /* ---------- events ---------- */
@@ -1258,8 +1504,10 @@ $('chips').onclick = e => {
   fillInputs(); readInputs(); recompute();
 };
 $('tabs').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) { S.tab = b.dataset.tab; S.q = ''; renderTabs(); } };
+$('lang').onclick = e => { const b = e.target.closest('[data-lang]'); if (b) setLang(b.dataset.lang); };
 $('saveBtn').onclick = save;
 $('doneOk').onclick = () => $('doneDlg').close();
+applyStatic();
 })();
 </script>
 </body>
